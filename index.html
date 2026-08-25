@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>class/ — foro de programación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="titlebar">
+    <div class="titlebar-dots"><span></span><span></span><span></span></div>
+    <div class="titlebar-path" id="titlebarPath">class/ — bienvenida.md</div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir explorador">☰</button>
+  </div>
+
+  <div class="app">
+    <aside class="explorer" id="explorer">
+      <div class="explorer-header">
+        <span class="explorer-title">EXPLORADOR</span>
+      </div>
+      <div class="explorer-root">
+        <div class="root-label">📂 class</div>
+        <nav id="tree" class="tree"></nav>
+      </div>
+      <div class="explorer-footer">
+        <span class="dot dot-green"></span> listo &nbsp;&nbsp;
+        <span class="dot dot-amber"></span> pendiente
+      </div>
+    </aside>
+
+    <main class="editor">
+      <div class="tabbar" id="tabbar"></div>
+      <div class="editor-pane" id="editorPane"></div>
+    </main>
+  </div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
