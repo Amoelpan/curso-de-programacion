@@ -13,6 +13,8 @@ const menuToggle = document.getElementById("menuToggle");
 
 let openTabs = []; // { catId, lessonId }
 let activeKey = null;
+let openCategories = new Set();   // ids de categorías expandidas
+let openSubfolders = new Set();   // "catId/subId" de subcarpetas expandidas
 
 function key(catId, lessonId) { return `${catId}/${lessonId}`; }
 
@@ -50,10 +52,16 @@ function renderFile(cat, lesson, extraClass) {
 function renderTree() {
   tree.innerHTML = "";
   FORUM_DATA.categories.forEach(cat => {
+    const catAbierta = openCategories.has(cat.id);
+
     const folder = document.createElement("div");
     folder.className = "folder";
     folder.tabIndex = 0;
-    folder.innerHTML = `<span class="folder-icon">${cat.icon}</span><span>${cat.title}</span>`;
+    folder.innerHTML = `<span class="folder-arrow">${catAbierta ? "▾" : "▸"}</span><span class="folder-icon">${cat.icon}</span><span>${cat.title}</span>`;
+    folder.addEventListener("click", () => toggleCategory(cat.id));
+    folder.addEventListener("keydown", e => {
+      if (e.key === "Enter") toggleCategory(cat.id);
+    });
     tree.appendChild(folder);
 
     const desc = document.createElement("span");
@@ -61,21 +69,41 @@ function renderTree() {
     desc.textContent = cat.description;
     tree.appendChild(desc);
 
+    if (!catAbierta) return; // carpeta cerrada: no dibujar su contenido
+
     (cat.lessons || []).forEach(lesson => {
       tree.appendChild(renderFile(cat, lesson));
     });
 
     (cat.subfolders || []).forEach(sub => {
+      const subKey = cat.id + "/" + sub.id;
+      const subAbierta = openSubfolders.has(subKey);
+
       const subEl = document.createElement("div");
       subEl.className = "subfolder";
-      subEl.innerHTML = `<span class="subfolder-icon">📂</span><span>${sub.title}</span>`;
+      subEl.innerHTML = `<span class="folder-arrow">${subAbierta ? "▾" : "▸"}</span><span class="subfolder-icon">📂</span><span>${sub.title}</span>`;
+      subEl.addEventListener("click", () => toggleSubfolder(subKey));
       tree.appendChild(subEl);
+
+      if (!subAbierta) return; // subcarpeta cerrada: no dibujar sus archivos
 
       sub.lessons.forEach(lesson => {
         tree.appendChild(renderFile(cat, lesson, "subfile"));
       });
     });
   });
+}
+
+function toggleCategory(catId) {
+  if (openCategories.has(catId)) openCategories.delete(catId);
+  else openCategories.add(catId);
+  renderTree();
+}
+
+function toggleSubfolder(subKey) {
+  if (openSubfolders.has(subKey)) openSubfolders.delete(subKey);
+  else openSubfolders.add(subKey);
+  renderTree();
 }
 
 /* ---------------- Tabs ---------------- */
@@ -127,7 +155,10 @@ function renderWelcome() {
       <p>Este es el punto de partida. A la izquierda están las carpetas del curso, cada una con sus lecciones — igual que en cualquier proyecto que abras en VS Code. Elige una carpeta para empezar. Los temas con punto verde ya tienen contenido; los de punto ámbar están en construcción.</p>
       <div class="welcome-list">
         <div>→ abre <strong>00 · Fundamentos</strong> si es tu primera vez programando</div>
-        <div>→ o salta directo a la ruta que te interesa: web, apps, móvil, escritorio, videojuegos o IA</div>
+        <div>→ o salta directo a la ruta que te interesa: web, apps, móvil, escritorio, videojuegos, IA, ciberseguridad y más</div>
+      </div>
+      <div class="donation-inline">
+        Este curso es y será siempre gratis. Si te sirvió y quieres apoyar a que siga creciendo, puedes <a href="https://www.paypal.com/donate/?hosted_button_id=TU_ID_AQUI" target="_blank" rel="noopener">dejar una donación aquí</a> — nunca es obligatorio, solo una forma de decir gracias.
       </div>
     </div>
   `;
@@ -140,6 +171,13 @@ function openLesson(catId, lessonId) {
   if (!openTabs.find(t => key(t.catId, t.lessonId) === k)) {
     openTabs.push({ catId, lessonId });
   }
+
+  // Expande la carpeta (y subcarpeta, si aplica) donde vive esta lección
+  const found = findLesson(catId, lessonId);
+  openCategories.add(catId);
+  if (found && found.sub) openSubfolders.add(catId + "/" + found.sub.id);
+  renderTree();
+
   setActive(catId, lessonId);
   if (window.innerWidth <= 760) explorer.classList.remove("open");
 }
