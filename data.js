@@ -966,34 +966,31 @@ echo htmlspecialchars($_POST["comentario"]);
       id: "apps-web",
       icon: "📁",
       title: "02 · Aplicaciones web",
-      description: "Frontend, backend, bases de datos y frameworks para apps completas.",
+      description: "React, Node/Express, bases de datos y despliegue — una carpeta por bloque.",
       lessons: [
         {
           id: "ruta-fullstack",
-          title: "ruta-de-aprendizaje.md",
+          title: "00-ruta-de-aprendizaje.md",
           status: "listo",
           body: [
             `<p>Una app web tiene dos partes: <strong>frontend</strong> (lo que el usuario ve y toca) y <strong>backend</strong> (la lógica y los datos que no se ven).</p>`,
             `<p><strong>Frontend:</strong> JavaScript → React (el más pedido en el mercado).<br>
-             <strong>Backend:</strong> Node.js con Express, o Python con FastAPI/Django.<br>
-             <strong>Base de datos:</strong> PostgreSQL (relacional) o MongoDB (documentos), empezando por SQLite si es tu primer proyecto.</p>`,
-            `<p>No aprendas los 3 a la vez. Orden sugerido: JavaScript sólido → un framework de frontend → un backend simple conectado a una base de datos.</p>`
+             <strong>Backend:</strong> Node.js con Express.<br>
+             <strong>Base de datos:</strong> SQL para datos relacionados entre sí, MongoDB para datos más libres.</p>`,
+            `<p>No aprendas los 3 a la vez. Orden sugerido: recorre <strong>react/</strong> primero, luego <strong>node-express/</strong>, luego <strong>bases-de-datos/</strong>, y termina con <strong>despliegue/</strong> para publicar el proyecto completo.</p>`
           ]
         },
         {
           id: "fetch-y-apis",
-          title: "fetch-y-apis.md",
+          title: "01-fetch-y-apis.md",
           status: "listo",
           body: [
-            `<p>Una <strong>API</strong> es un servidor que responde con datos (normalmente en formato JSON) cuando le pides algo. <code>fetch</code> es la función de JavaScript para pedirle datos a esa API sin recargar la página.</p>`,
+            `<p>Una <strong>API</strong> es un servidor que responde con datos (normalmente en formato JSON) cuando le pides algo. <code>fetch</code> es la función de JavaScript para pedirle datos a esa API sin recargar la página — es el puente entre tu frontend y tu backend.</p>`,
             `<pre class="code-block"><code>async function obtenerUsuario() {
   const respuesta = await fetch("https://api.ejemplo.com/usuario/1");
   const datos = await respuesta.json();
   console.log(datos.nombre);
-}
-
-obtenerUsuario();</code></pre>`,
-            `<p><strong>Lo esencial:</strong> <code>fetch</code> siempre devuelve una promesa, por eso se usa con <code>await</code> dentro de una función <code>async</code>. <code>.json()</code> convierte la respuesta en un objeto de JavaScript que ya puedes usar.</p>`,
+}</code></pre>`,
             `<p>Envío de datos (por ejemplo, un formulario) usa <code>method: "POST"</code>:</p>`,
             `<pre class="code-block"><code>await fetch("https://api.ejemplo.com/mensajes", {
   method: "POST",
@@ -1003,91 +1000,11 @@ obtenerUsuario();</code></pre>`,
           ]
         },
         {
-          id: "intro-react",
-          title: "intro-react.md",
-          status: "listo",
-          body: [
-            `<p><strong>React</strong> organiza la interfaz en <strong>componentes</strong> reutilizables. Cada componente es una función que devuelve HTML (en realidad JSX, que se ve casi igual).</p>`,
-            `<pre class="code-block"><code>function TarjetaUsuario({ nombre, edad }) {
-  return (
-    &lt;div className="tarjeta"&gt;
-      &lt;h2&gt;{nombre}&lt;/h2&gt;
-      &lt;p&gt;{edad} años&lt;/p&gt;
-    &lt;/div&gt;
-  );
-}
-
-// Se usa así, pasándole "props":
-&lt;TarjetaUsuario nombre="Joseph" edad={20} /&gt;</code></pre>`,
-            `<p><strong>State</strong> — la forma en que un componente "recuerda" y actualiza datos que cambian (como un contador o un formulario):</p>`,
-            `<pre class="code-block"><code>import { useState } from "react";
-
-function Contador() {
-  const [cuenta, setCuenta] = useState(0);
-
-  return (
-    &lt;button onClick={() =&gt; setCuenta(cuenta + 1)}&gt;
-      Clics: {cuenta}
-    &lt;/button&gt;
-  );
-}</code></pre>`,
-            `<p>Regla clave: nunca modifiques el state directamente (<code>cuenta = cuenta + 1</code>) — siempre usa la función que te da <code>useState</code> (<code>setCuenta</code>), o React no se entera del cambio.</p>`
-          ]
-        },
-        {
-          id: "backend-express",
-          title: "backend-node-express.md",
-          status: "listo",
-          body: [
-            `<p><strong>Express</strong> es la forma más simple de crear un backend en Node.js — un servidor que responde a peticiones.</p>`,
-            `<pre class="code-block"><code>const express = require("express");
-const app = express();
-app.use(express.json());
-
-let tareas = [];
-
-app.get("/tareas", (req, res) =&gt; {
-  res.json(tareas);
-});
-
-app.post("/tareas", (req, res) =&gt; {
-  const nueva = req.body.texto;
-  tareas.push(nueva);
-  res.status(201).json({ mensaje: "Tarea agregada" });
-});
-
-app.listen(3000, () =&gt; console.log("Servidor corriendo en el puerto 3000"));</code></pre>`,
-            `<p>Instalación: <code>npm init -y</code> y luego <code>npm install express</code>. Corre el archivo con <code>node servidor.js</code>. Ahora tu frontend puede hacer <code>fetch("http://localhost:3000/tareas")</code> y hablar con este backend.</p>`
-          ]
-        },
-        {
-          id: "bases-de-datos-basico",
-          title: "bases-de-datos-basico.md",
-          status: "listo",
-          body: [
-            `<p>Una base de datos guarda la información para siempre (a diferencia de una variable, que se borra al reiniciar el servidor). <strong>SQLite</strong> es la mejor para empezar: no necesita instalación de servidor, es un solo archivo.</p>`,
-            `<pre class="code-block"><code>CREATE TABLE usuarios (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nombre TEXT NOT NULL,
-  edad INTEGER
-);
-
-INSERT INTO usuarios (nombre, edad) VALUES ('Joseph', 20);
-
-SELECT * FROM usuarios WHERE edad &gt; 18;
-
-UPDATE usuarios SET edad = 21 WHERE nombre = 'Joseph';
-
-DELETE FROM usuarios WHERE id = 1;</code></pre>`,
-            `<p>Esos 5 comandos (<strong>CREATE, INSERT, SELECT, UPDATE, DELETE</strong>) son el 90% de lo que vas a usar en cualquier base de datos relacional (SQLite, PostgreSQL, MySQL — la sintaxis es casi idéntica entre las tres).</p>`
-          ]
-        },
-        {
           id: "ejercicio-clima",
-          title: "ejercicio-app-del-clima.md",
+          title: "02-ejercicio-app-del-clima.md",
           status: "listo",
           body: [
-            `<div class="exercise-box"><span class="exercise-label">🧩 EJERCICIO 1 — nivel: ya sabes fetch</span>
+            `<div class="exercise-box"><span class="exercise-label">🧩 EJERCICIO 1 — usa fetch (arriba) o react/</span>
              <p>Crea una <strong>app del clima</strong>:</p>
              <ul>
                <li>Un <code>&lt;input&gt;</code> para escribir el nombre de una ciudad</li>
@@ -1100,19 +1017,422 @@ DELETE FROM usuarios WHERE id = 1;</code></pre>`,
         },
         {
           id: "ejercicio-api-tareas",
-          title: "ejercicio-api-de-tareas.md",
+          title: "03-ejercicio-api-de-tareas.md",
           status: "listo",
           body: [
-            `<div class="exercise-box"><span class="exercise-label">🧩 EJERCICIO 2 — nivel: ya sabes Express</span>
+            `<div class="exercise-box"><span class="exercise-label">🧩 EJERCICIO 2 — usa node-express/</span>
              <p>Construye una <strong>API de tareas completa</strong> (backend) con estas 4 rutas:</p>
              <ul>
                <li><code>GET /tareas</code> — devuelve todas las tareas</li>
                <li><code>POST /tareas</code> — agrega una tarea nueva</li>
-               <li><code>DELETE /tareas/:id</code> — elimina una tarea por su posición en el arreglo</li>
+               <li><code>DELETE /tareas/:id</code> — elimina una tarea</li>
                <li><code>PUT /tareas/:id</code> — marca una tarea como completada</li>
              </ul>
-             <p>Pruébala con la extensión <strong>Thunder Client</strong> de VS Code (envía peticiones sin necesitar un frontend) antes de conectarla a una página.</p>
+             <p>Pruébala con la extensión <strong>Thunder Client</strong> de VS Code antes de conectarla a un frontend. Luego, si ya viste <strong>react/</strong>, conéctala a una interfaz real.</p>
              </div>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "react",
+          title: "react/",
+          lessons: [
+            {
+              id: "react-componentes-props",
+              title: "01-componentes-y-props.md",
+              status: "listo",
+              body: [
+                `<p>React organiza la interfaz en <strong>componentes</strong> reutilizables. Cada componente es una función que devuelve HTML (en realidad JSX, que se ve casi igual).</p>`,
+                `<pre class="code-block"><code>function TarjetaUsuario({ nombre, edad }) {
+  return (
+    &lt;div className="tarjeta"&gt;
+      &lt;h2&gt;{nombre}&lt;/h2&gt;
+      &lt;p&gt;{edad} años&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Se usa así, pasándole "props":
+&lt;TarjetaUsuario nombre="Joseph" edad={20} /&gt;</code></pre>`,
+                `<p><strong>Props</strong> son los datos que un componente padre le pasa a un componente hijo — son de solo lectura, el hijo nunca las modifica directamente. Nota: se usa <code>className</code> en vez de <code>class</code>, porque <code>class</code> es palabra reservada en JavaScript.</p>`
+              ]
+            },
+            {
+              id: "react-state-hooks",
+              title: "02-state-y-usestate.md",
+              status: "listo",
+              body: [
+                `<p><strong>State</strong> es la forma en que un componente "recuerda" y actualiza datos que cambian (como un contador o un formulario). Se maneja con el <strong>hook</strong> <code>useState</code>.</p>`,
+                `<pre class="code-block"><code>import { useState } from "react";
+
+function Contador() {
+  const [cuenta, setCuenta] = useState(0);
+
+  return (
+    &lt;button onClick={() =&gt; setCuenta(cuenta + 1)}&gt;
+      Clics: {cuenta}
+    &lt;/button&gt;
+  );
+}</code></pre>`,
+                `<p>Regla clave: nunca modifiques el state directamente (<code>cuenta = cuenta + 1</code>) — siempre usa la función que te da <code>useState</code> (<code>setCuenta</code>), o React no se entera del cambio y no vuelve a dibujar la pantalla.</p>`
+              ]
+            },
+            {
+              id: "react-eventos-formularios",
+              title: "03-eventos-y-formularios.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>function Formulario() {
+  const [nombre, setNombre] = useState("");
+
+  function manejarEnvio(evento) {
+    evento.preventDefault();
+    console.log("Enviado:", nombre);
+  }
+
+  return (
+    &lt;form onSubmit={manejarEnvio}&gt;
+      &lt;input
+        value={nombre}
+        onChange={(e) =&gt; setNombre(e.target.value)}
+      /&gt;
+      &lt;button type="submit"&gt;Enviar&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>`,
+                `<p>Esto se llama un <strong>"input controlado"</strong>: el valor del campo siempre viene del state (<code>value={nombre}</code>), y cada tecla que escribes actualiza ese state con <code>onChange</code>. Es el patrón estándar para formularios en React.</p>`
+              ]
+            },
+            {
+              id: "react-listas-keys",
+              title: "04-listas-y-keys.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>const tareas = ["Comprar pan", "Estudiar React", "Dormir"];
+
+function ListaTareas() {
+  return (
+    &lt;ul&gt;
+      {tareas.map((tarea, index) =&gt; (
+        &lt;li key={index}&gt;{tarea}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>`,
+                `<p>Cuando muestras un arreglo con <code>.map()</code>, React exige una <code>key</code> única en cada elemento — así sabe cuál cambió, se agregó o se borró, sin tener que redibujar toda la lista. Usa el <code>id</code> real del dato cuando lo tengas; el <code>index</code> del arreglo es un último recurso, no lo ideal.</p>`
+              ]
+            },
+            {
+              id: "react-useeffect",
+              title: "05-useeffect.md",
+              status: "listo",
+              body: [
+                `<p><code>useEffect</code> ejecuta código cuando el componente aparece en pantalla (o cuando algo específico cambia) — es donde va, por ejemplo, un <code>fetch</code> para cargar datos al abrir la página.</p>`,
+                `<pre class="code-block"><code>import { useState, useEffect } from "react";
+
+function ListaUsuarios() {
+  const [usuarios, setUsuarios] = useState([]);
+
+  useEffect(() =&gt; {
+    fetch("https://api.ejemplo.com/usuarios")
+      .then(res =&gt; res.json())
+      .then(datos =&gt; setUsuarios(datos));
+  }, []); // el arreglo vacío = "ejecuta esto solo una vez, al cargar"
+
+  return (
+    &lt;ul&gt;{usuarios.map(u =&gt; &lt;li key={u.id}&gt;{u.nombre}&lt;/li&gt;)}&lt;/ul&gt;
+  );
+}</code></pre>`,
+                `<p>El segundo argumento (el arreglo <code>[]</code>) controla cuándo se repite el efecto: vacío = solo una vez; con variables adentro (<code>[busqueda]</code>) = cada vez que esa variable cambie; sin arreglo = después de cada render (rara vez lo necesitas).</p>`
+              ]
+            },
+            {
+              id: "react-router",
+              title: "06-react-router.md",
+              status: "listo",
+              body: [
+                `<p>Una app real tiene varias "páginas" (inicio, perfil, contacto) sin recargar el navegador. <strong>React Router</strong> es la librería estándar para eso.</p>`,
+                `<pre class="code-block"><code>// npm install react-router-dom
+
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;nav&gt;
+        &lt;Link to="/"&gt;Inicio&lt;/Link&gt;
+        &lt;Link to="/perfil"&gt;Perfil&lt;/Link&gt;
+      &lt;/nav&gt;
+
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Inicio /&gt;} /&gt;
+        &lt;Route path="/perfil" element={&lt;Perfil /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</code></pre>`,
+                `<p><code>Link</code> reemplaza a <code>&lt;a&gt;</code> dentro de una app de React — cambia la URL sin recargar toda la página, que es lo que hace que estas apps se sientan tan rápidas.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "node-express",
+          title: "node-express/",
+          lessons: [
+            {
+              id: "node-primer-servidor",
+              title: "01-primer-servidor.md",
+              status: "listo",
+              body: [
+                `<p><strong>Express</strong> es la forma más simple de crear un backend en Node.js — un servidor que responde a peticiones.</p>`,
+                `<pre class="code-block"><code>// npm init -y
+// npm install express
+
+const express = require("express");
+const app = express();
+app.use(express.json()); // permite leer JSON en el body de las peticiones
+
+app.get("/", (req, res) =&gt; {
+  res.send("Servidor funcionando");
+});
+
+app.listen(3000, () =&gt; console.log("Escuchando en el puerto 3000"));</code></pre>`,
+                `<p>Corre el archivo con <code>node servidor.js</code> y abre <code>http://localhost:3000</code> en el navegador. Cada vez que cambies el código tienes que reiniciar el servidor — o usa <code>nodemon</code> (<code>npm install -g nodemon</code>) para que se reinicie solo.</p>`
+              ]
+            },
+            {
+              id: "node-rutas-metodos",
+              title: "02-rutas-y-metodos-http.md",
+              status: "listo",
+              body: [
+                `<p>Una <strong>ruta</strong> combina un método HTTP con una URL. Los 4 métodos que vas a usar el 95% del tiempo (CRUD: Crear, Leer, Actualizar, Borrar):</p>`,
+                `<pre class="code-block"><code>let tareas = [];
+
+app.get("/tareas", (req, res) =&gt; {
+  res.json(tareas); // LEER todas
+});
+
+app.get("/tareas/:id", (req, res) =&gt; {
+  const tarea = tareas[req.params.id];
+  res.json(tarea); // LEER una sola
+});
+
+app.post("/tareas", (req, res) =&gt; {
+  tareas.push(req.body.texto);
+  res.status(201).json({ mensaje: "Tarea creada" }); // CREAR
+});
+
+app.put("/tareas/:id", (req, res) =&gt; {
+  tareas[req.params.id] = req.body.texto;
+  res.json({ mensaje: "Tarea actualizada" }); // ACTUALIZAR
+});
+
+app.delete("/tareas/:id", (req, res) =&gt; {
+  tareas.splice(req.params.id, 1);
+  res.json({ mensaje: "Tarea eliminada" }); // BORRAR
+});</code></pre>`,
+                `<p><code>req.params</code> lee valores de la URL (<code>:id</code>), <code>req.body</code> lee el JSON que envió el cliente, <code>req.query</code> lee parámetros como <code>?busqueda=pan</code>.</p>`
+              ]
+            },
+            {
+              id: "node-middleware",
+              title: "03-middleware.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>middleware</strong> es una función que se ejecuta <em>entre</em> que llega la petición y que responde la ruta — sirve para validar, registrar, o bloquear peticiones antes de que lleguen a su destino.</p>`,
+                `<pre class="code-block"><code>function verificarToken(req, res, next) {
+  const token = req.headers["authorization"];
+  if (!token) {
+    return res.status(401).json({ error: "No autorizado" });
+  }
+  next(); // deja continuar hacia la ruta
+}
+
+app.get("/perfil", verificarToken, (req, res) =&gt; {
+  res.json({ mensaje: "Acceso concedido" });
+});</code></pre>`,
+                `<p><code>express.json()</code>, que ya usaste en la primera lección, también es un middleware — se ejecuta en todas las rutas. <code>next()</code> es la clave: si no lo llamas, la petición se queda "colgada" y nunca llega a la ruta.</p>`
+              ]
+            },
+            {
+              id: "node-cors",
+              title: "04-conectar-con-el-frontend-y-cors.md",
+              status: "listo",
+              body: [
+                `<p>Si tu frontend (React, en <code>localhost:5173</code>) intenta hacer <code>fetch</code> a tu backend (Express, en <code>localhost:3000</code>), el navegador lo bloquea por seguridad a menos que el servidor lo permita explícitamente. Eso se llama <strong>CORS</strong>.</p>`,
+                `<pre class="code-block"><code>// npm install cors
+
+const cors = require("cors");
+app.use(cors()); // permite peticiones desde cualquier origen (para desarrollo)</code></pre>`,
+                `<p>En producción, en vez de permitir "cualquier origen", se restringe solo al dominio real de tu frontend: <code>app.use(cors({ origin: "https://tu-sitio.com" }))</code>.</p>`
+              ]
+            },
+            {
+              id: "node-autenticacion-jwt",
+              title: "05-autenticacion-con-jwt.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>JWT</strong> (JSON Web Token) es como una "pulsera de acceso" que el servidor le da al usuario después de un login exitoso — el frontend la guarda y la envía en cada petición siguiente para probar quién es.</p>`,
+                `<pre class="code-block"><code>// npm install jsonwebtoken bcrypt
+
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const CLAVE_SECRETA = "algo-largo-y-secreto";
+
+app.post("/login", async (req, res) =&gt; {
+  const usuario = buscarUsuarioPorCorreo(req.body.correo);
+  const claveValida = await bcrypt.compare(req.body.password, usuario.passwordHash);
+
+  if (!claveValida) return res.status(401).json({ error: "Datos incorrectos" });
+
+  const token = jwt.sign({ id: usuario.id }, CLAVE_SECRETA, { expiresIn: "7d" });
+  res.json({ token });
+});</code></pre>`,
+                `<p><code>bcrypt</code> guarda contraseñas "hasheadas" (nunca en texto plano). El frontend guarda el <code>token</code> devuelto y lo manda en el header <code>Authorization</code> de cada petición futura, para que el middleware de la lección anterior lo verifique.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "bases-de-datos",
+          title: "bases-de-datos/",
+          lessons: [
+            {
+              id: "bd-sql-basico",
+              title: "01-sql-basico.md",
+              status: "listo",
+              body: [
+                `<p>Una base de datos guarda la información para siempre (a diferencia de una variable, que se borra al reiniciar el servidor). <strong>SQLite</strong> es la mejor para empezar: no necesita instalación de servidor, es un solo archivo.</p>`,
+                `<pre class="code-block"><code>CREATE TABLE usuarios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL,
+  edad INTEGER
+);
+
+INSERT INTO usuarios (nombre, edad) VALUES ('Joseph', 20);
+
+SELECT * FROM usuarios WHERE edad &gt; 18;
+
+UPDATE usuarios SET edad = 21 WHERE nombre = 'Joseph';
+
+DELETE FROM usuarios WHERE id = 1;</code></pre>`,
+                `<p>Esos 5 comandos (<strong>CREATE, INSERT, SELECT, UPDATE, DELETE</strong>) son el 90% de lo que vas a usar en cualquier base de datos relacional (SQLite, PostgreSQL, MySQL — la sintaxis es casi idéntica entre las tres).</p>`
+              ]
+            },
+            {
+              id: "bd-relaciones",
+              title: "02-relaciones-entre-tablas.md",
+              status: "listo",
+              body: [
+                `<p>Las tablas se conectan entre sí con <strong>llaves foráneas</strong> (foreign keys) — así evitas repetir datos y mantienes todo organizado.</p>`,
+                `<pre class="code-block"><code>CREATE TABLE usuarios (
+  id INTEGER PRIMARY KEY,
+  nombre TEXT
+);
+
+CREATE TABLE publicaciones (
+  id INTEGER PRIMARY KEY,
+  titulo TEXT,
+  usuario_id INTEGER,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+
+-- Traer publicaciones junto con el nombre de su autor
+SELECT publicaciones.titulo, usuarios.nombre
+FROM publicaciones
+JOIN usuarios ON publicaciones.usuario_id = usuarios.id;</code></pre>`,
+                `<p><code>JOIN</code> es la operación clave: combina filas de dos tablas relacionadas en una sola consulta. Es la diferencia entre una base de datos "plana" y una relacional de verdad.</p>`
+              ]
+            },
+            {
+              id: "bd-orm",
+              title: "03-orm-prisma.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>ORM</strong> (Object-Relational Mapper) te deja trabajar con la base de datos usando código JavaScript normal, en vez de escribir SQL a mano. <strong>Prisma</strong> es el más usado hoy con Node.js.</p>`,
+                `<pre class="code-block"><code>// schema.prisma
+model Usuario {
+  id     Int    @id @default(autoincrement())
+  nombre String
+  edad   Int
+}</code></pre>`,
+                `<pre class="code-block"><code>// En tu código Node.js
+const usuarios = await prisma.usuario.findMany();
+
+const nuevo = await prisma.usuario.create({
+  data: { nombre: "Joseph", edad: 20 }
+});</code></pre>`,
+                `<p>Ventaja principal: menos errores de sintaxis SQL, autocompletado en el editor, y protección automática contra SQL injection. Desventaja: para consultas muy complejas a veces es más directo escribir el SQL tú mismo.</p>`
+              ]
+            },
+            {
+              id: "bd-mongodb",
+              title: "04-mongodb-vs-sql.md",
+              status: "listo",
+              body: [
+                `<p><strong>MongoDB</strong> guarda datos como documentos parecidos a JSON, no en tablas con filas y columnas fijas. Es útil cuando tus datos no tienen una estructura rígida o cambia mucho de un registro a otro.</p>`,
+                `<pre class="code-block"><code>// Con Mongoose (la librería más usada para MongoDB + Node)
+const Usuario = mongoose.model("Usuario", {
+  nombre: String,
+  edad: Number,
+  intereses: [String] // un arreglo, sin necesitar otra tabla
+});
+
+const nuevo = await Usuario.create({ nombre: "Joseph", edad: 20, intereses: ["código"] });
+const todos = await Usuario.find();</code></pre>`,
+                `<p><strong>¿Cuándo usar cuál?</strong> SQL (relacional) cuando tus datos tienen relaciones claras y necesitas consistencia estricta (dinero, inventario). MongoDB cuando la estructura varía mucho o priorizas velocidad de desarrollo sobre relaciones complejas.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "despliegue",
+          title: "despliegue/",
+          lessons: [
+            {
+              id: "despliegue-variables-entorno",
+              title: "01-variables-de-entorno.md",
+              status: "listo",
+              body: [
+                `<p>Nunca escribas contraseñas, claves de API o datos de conexión directamente en tu código — se guardan en un archivo <code>.env</code> que <strong>nunca</strong> se sube a GitHub.</p>`,
+                `<pre class="code-block"><code>// archivo .env
+DATABASE_URL=postgresql://usuario:clave@host/basededatos
+JWT_SECRET=algo-largo-y-aleatorio</code></pre>`,
+                `<pre class="code-block"><code>// npm install dotenv
+require("dotenv").config();
+
+const clave = process.env.JWT_SECRET;</code></pre>`,
+                `<p>Agrega <code>.env</code> a tu archivo <code>.gitignore</code> para que Git nunca lo suba. Cuando despliegues, esas mismas variables se configuran directamente en el panel de la plataforma de hosting (no en un archivo).</p>`
+              ]
+            },
+            {
+              id: "despliegue-backend",
+              title: "02-desplegar-el-backend.md",
+              status: "listo",
+              body: [
+                `<p>Un backend de Node/Express necesita un servidor que esté siempre corriendo (a diferencia de una página estática). Opciones gratuitas para empezar: <strong>Render</strong> y <strong>Railway</strong>.</p>`,
+                `<ul>
+                   <li>Sube tu proyecto a GitHub (igual que hiciste con el foro).</li>
+                   <li>En Render/Railway: "New Web Service" → conecta tu repositorio.</li>
+                   <li>Configura el comando de inicio: <code>node servidor.js</code></li>
+                   <li>Agrega tus variables de entorno (<code>.env</code>) en el panel de la plataforma, no en el código.</li>
+                 </ul>`,
+                `<p>Te dan una URL pública como <code>https://tu-app.onrender.com</code> — esa es la URL que tu frontend va a usar en sus peticiones <code>fetch</code> una vez publicado.</p>`
+              ]
+            },
+            {
+              id: "despliegue-frontend",
+              title: "03-desplegar-el-frontend.md",
+              status: "listo",
+              body: [
+                `<p>Una app de React se "compila" a archivos estáticos (HTML/CSS/JS) antes de publicarse — por eso se despliega distinto a un sitio con Live Server.</p>`,
+                `<pre class="code-block"><code>npm run build</code></pre>`,
+                `<p>Eso genera una carpeta <code>dist/</code> o <code>build/</code>. Súbela a <strong>Vercel</strong> o <strong>Netlify</strong> (conectando tu repositorio de GitHub, igual que con GitHub Pages) y la plataforma detecta automáticamente que es un proyecto de React y hace el build por ti.</p>`,
+                `<p>Último paso: en el código de React, donde antes tenías <code>fetch("http://localhost:3000/...")</code>, cámbialo por la URL real de tu backend ya desplegado (de la lección anterior) — normalmente guardada también en una variable de entorno.</p>`
+              ]
+            }
           ]
         }
       ]
