@@ -19,11 +19,34 @@ function key(catId, lessonId) { return `${catId}/${lessonId}`; }
 function findLesson(catId, lessonId) {
   const cat = FORUM_DATA.categories.find(c => c.id === catId);
   if (!cat) return null;
-  const lesson = cat.lessons.find(l => l.id === lessonId);
-  return lesson ? { cat, lesson } : null;
+  if (cat.lessons) {
+    const direct = cat.lessons.find(l => l.id === lessonId);
+    if (direct) return { cat, sub: null, lesson: direct };
+  }
+  if (cat.subfolders) {
+    for (const sub of cat.subfolders) {
+      const found = sub.lessons.find(l => l.id === lessonId);
+      if (found) return { cat, sub, lesson: found };
+    }
+  }
+  return null;
 }
 
 /* ---------------- Explorer tree ---------------- */
+function renderFile(cat, lesson, extraClass) {
+  const file = document.createElement("div");
+  file.className = "file" + (extraClass ? " " + extraClass : "");
+  file.tabIndex = 0;
+  file.dataset.key = key(cat.id, lesson.id);
+  const dotClass = lesson.status === "listo" ? "dot-green" : "dot-amber";
+  file.innerHTML = `<span class="status-dot ${dotClass}"></span><span>${lesson.title}</span>`;
+  file.addEventListener("click", () => openLesson(cat.id, lesson.id));
+  file.addEventListener("keydown", e => {
+    if (e.key === "Enter") openLesson(cat.id, lesson.id);
+  });
+  return file;
+}
+
 function renderTree() {
   tree.innerHTML = "";
   FORUM_DATA.categories.forEach(cat => {
@@ -38,18 +61,19 @@ function renderTree() {
     desc.textContent = cat.description;
     tree.appendChild(desc);
 
-    cat.lessons.forEach(lesson => {
-      const file = document.createElement("div");
-      file.className = "file";
-      file.tabIndex = 0;
-      file.dataset.key = key(cat.id, lesson.id);
-      const dotClass = lesson.status === "listo" ? "dot-green" : "dot-amber";
-      file.innerHTML = `<span class="status-dot ${dotClass}"></span><span>${lesson.title}</span>`;
-      file.addEventListener("click", () => openLesson(cat.id, lesson.id));
-      file.addEventListener("keydown", e => {
-        if (e.key === "Enter") openLesson(cat.id, lesson.id);
+    (cat.lessons || []).forEach(lesson => {
+      tree.appendChild(renderFile(cat, lesson));
+    });
+
+    (cat.subfolders || []).forEach(sub => {
+      const subEl = document.createElement("div");
+      subEl.className = "subfolder";
+      subEl.innerHTML = `<span class="subfolder-icon">📂</span><span>${sub.title}</span>`;
+      tree.appendChild(subEl);
+
+      sub.lessons.forEach(lesson => {
+        tree.appendChild(renderFile(cat, lesson, "subfile"));
       });
-      tree.appendChild(file);
     });
   });
 }
@@ -72,9 +96,9 @@ function renderTabs() {
 function renderLesson(catId, lessonId) {
   const found = findLesson(catId, lessonId);
   if (!found) return;
-  const { cat, lesson } = found;
+  const { cat, sub, lesson } = found;
 
-  titlebarPath.textContent = `class/${cat.id}/${lesson.title}`;
+  titlebarPath.textContent = `class/${cat.id}/${sub ? sub.id + "/" : ""}${lesson.title}`;
 
   const pending = lesson.status === "pendiente"
     ? `<div class="pending-banner">🔧 pendiente — este tema se irá ampliando</div>`
@@ -82,7 +106,7 @@ function renderLesson(catId, lessonId) {
 
   editorPane.innerHTML = `
     <article class="lesson">
-      <div class="lesson-eyebrow">${cat.title}</div>
+      <div class="lesson-eyebrow">${cat.title}${sub ? " / " + sub.title : ""}</div>
       <h1 class="lesson-title">${lesson.title.replace(".md","")}<span class="cursor"></span></h1>
       ${pending}
       <div class="lesson-body">${lesson.body.join("")}</div>

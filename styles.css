@@ -132,6 +132,24 @@ html, body {
 }
 .file:hover { background: var(--panel-2); color: var(--text); }
 .file.active { background: rgba(111,168,255,0.12); color: var(--accent-2); }
+
+.subfolder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 7px 32px;
+  margin-left: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #cfd4dd;
+}
+.subfolder:hover { background: var(--panel-2); }
+.subfolder-icon { font-size: 12px; opacity: 0.85; }
+.subfile {
+  padding-left: 58px;
+}
 .status-dot {
   width: 6px; height: 6px; border-radius: 50%;
   flex-shrink: 0;
