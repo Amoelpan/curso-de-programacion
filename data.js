@@ -1441,80 +1441,269 @@ const clave = process.env.JWT_SECRET;</code></pre>`,
       id: "apps-moviles",
       icon: "📁",
       title: "03 · Apps móviles",
-      description: "Android, iOS y desarrollo multiplataforma.",
+      description: "React Native, Android nativo, iOS y cómo publicar — una carpeta por bloque.",
       lessons: [
         {
           id: "nativo-vs-multiplataforma",
-          title: "nativo-vs-multiplataforma.md",
+          title: "00-nativo-vs-multiplataforma.md",
           status: "listo",
           body: [
             `<p><strong>Nativo</strong> (Kotlin para Android, Swift para iOS): mejor rendimiento y acceso total al hardware, pero tienes que mantener dos proyectos separados.</p>`,
             `<p><strong>Multiplataforma</strong> (React Native, Flutter): un solo código para Android e iOS. Es la ruta más eficiente si estás empezando y quieres publicar rápido en ambas tiendas.</p>`,
-            `<p>Recomendación para principiantes: <strong>React Native con Expo</strong> — instalación mínima, previsualización en tu propio celular sin cables, y reutiliza lo que ya sabes de JavaScript.</p>`
+            `<p>Recomendación para principiantes: recorre primero <strong>react-native/</strong> — instalación mínima, previsualización en tu propio celular sin cables, y reutiliza lo que ya sabes de JavaScript. Luego <strong>android-kotlin/</strong> si quieres control total en Android, y <strong>ios-swift/</strong> si en algún momento tienes acceso a una Mac.</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "react-native",
+          title: "react-native/",
+          lessons: [
+            {
+              id: "rn-primeros-pasos",
+              title: "01-primeros-pasos-con-expo.md",
+              status: "listo",
+              body: [
+                `<p><strong>Expo</strong> es la forma más rápida de tener una app corriendo en tu propio celular, sin necesitar una Mac ni configurar Android Studio primero.</p>`,
+                `<p><strong>Pasos:</strong></p>
+                 <ul>
+                   <li>Instala Node.js (si ya hiciste la lección de Fundamentos, ya lo tienes).</li>
+                   <li>En la terminal: <code>npx create-expo-app mi-primera-app</code></li>
+                   <li>Entra a la carpeta: <code>cd mi-primera-app</code> y ejecuta <code>npx expo start</code></li>
+                   <li>Instala la app <strong>Expo Go</strong> en tu celular (Play Store) y escanea el código QR que aparece en la terminal.</li>
+                 </ul>`,
+                `<p>Cualquier cambio que guardes en el código se refleja al instante en tu celular — así puedes practicar sin recompilar todo el proyecto cada vez.</p>`
+              ]
+            },
+            {
+              id: "rn-componentes-basicos",
+              title: "02-componentes-basicos.md",
+              status: "listo",
+              body: [
+                `<p>React Native no usa HTML — usa sus propios componentes que se traducen a elementos nativos de verdad en cada plataforma.</p>`,
+                `<pre class="code-block"><code>import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
+
+export default function App() {
+  return (
+    &lt;View style={estilos.contenedor}&gt;
+      &lt;Text style={estilos.titulo}&gt;Hola, Joseph&lt;/Text&gt;
+      &lt;Image source={{ uri: "https://via.placeholder.com/100" }} style={{ width: 100, height: 100 }} /&gt;
+    &lt;/View&gt;
+  );
+}
+
+const estilos = StyleSheet.create({
+  contenedor: { flex: 1, justifyContent: "center", alignItems: "center" },
+  titulo: { fontSize: 22, fontWeight: "bold" }
+});</code></pre>`,
+                `<p><strong>Equivalencias con la web:</strong> <code>View</code> es como un <code>&lt;div&gt;</code>, <code>Text</code> es como un <code>&lt;p&gt;</code> (todo texto DEBE ir dentro de <code>Text</code>, a diferencia de HTML), y los estilos se escriben como objetos de JavaScript, no CSS — pero <code>flex</code> funciona casi igual que en la web.</p>`
+              ]
+            },
+            {
+              id: "rn-navegacion",
+              title: "03-navegacion-entre-pantallas.md",
+              status: "listo",
+              body: [
+                `<p>Una app real tiene varias pantallas. <strong>React Navigation</strong> es la librería estándar para moverte entre ellas.</p>`,
+                `<pre class="code-block"><code>// npx expo install @react-navigation/native @react-navigation/native-stack
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+
+function App() {
+  return (
+    &lt;NavigationContainer&gt;
+      &lt;Stack.Navigator&gt;
+        &lt;Stack.Screen name="Inicio" component={PantallaInicio} /&gt;
+        &lt;Stack.Screen name="Perfil" component={PantallaPerfil} /&gt;
+      &lt;/Stack.Navigator&gt;
+    &lt;/NavigationContainer&gt;
+  );
+}
+
+// Dentro de PantallaInicio, para ir a otra pantalla:
+// navigation.navigate("Perfil")</code></pre>`,
+                `<p>Cada pantalla recibe automáticamente una prop <code>navigation</code> que usas para moverte hacia adelante (<code>navigate</code>) o hacia atrás (<code>goBack</code>), y una barra superior con botón de regreso que se genera sola.</p>`
+              ]
+            },
+            {
+              id: "rn-consumir-apis",
+              title: "04-consumir-apis.md",
+              status: "listo",
+              body: [
+                `<p>Conectar tu app a un backend funciona exactamente igual que en la web — mismo <code>fetch</code>, mismo <code>async/await</code>:</p>`,
+                `<pre class="code-block"><code>import { useState, useEffect } from "react";
+import { View, Text, FlatList } from "react-native";
+
+export default function ListaUsuarios() {
+  const [usuarios, setUsuarios] = useState([]);
+
+  useEffect(() =&gt; {
+    fetch("https://api.ejemplo.com/usuarios")
+      .then(res =&gt; res.json())
+      .then(datos =&gt; setUsuarios(datos));
+  }, []);
+
+  return (
+    &lt;FlatList
+      data={usuarios}
+      keyExtractor={item =&gt; String(item.id)}
+      renderItem={({ item }) =&gt; &lt;Text&gt;{item.nombre}&lt;/Text&gt;}
+    /&gt;
+  );
+}</code></pre>`,
+                `<p><code>FlatList</code> es el equivalente móvil de hacer <code>.map()</code> en una lista — pero optimizado, porque solo dibuja los elementos visibles en pantalla (importante para listas largas en un celular con memoria limitada).</p>`
+              ]
+            },
+            {
+              id: "rn-asyncstorage",
+              title: "05-guardar-datos-localmente.md",
+              status: "listo",
+              body: [
+                `<p><code>AsyncStorage</code> es el equivalente móvil de <code>localStorage</code> en la web — guarda datos en el celular que persisten aunque cierres la app.</p>`,
+                `<pre class="code-block"><code>// npx expo install @react-native-async-storage/async-storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+async function guardarUsuario(datos) {
+  await AsyncStorage.setItem("usuario", JSON.stringify(datos));
+}
+
+async function leerUsuario() {
+  const datos = await AsyncStorage.getItem("usuario");
+  return datos ? JSON.parse(datos) : null;
+}</code></pre>`,
+                `<p>Úsalo para recordar si el usuario ya inició sesión, sus preferencias, o un progreso local — igual que en la web, nunca para datos sensibles como contraseñas.</p>`
+              ]
+            }
           ]
         },
         {
-          id: "primeros-pasos-expo",
-          title: "primeros-pasos-expo.md",
-          status: "listo",
-          body: [
-            `<p><strong>Expo</strong> es la forma más rápida de tener una app corriendo en tu propio celular, sin necesitar una Mac ni configurar Android Studio primero.</p>`,
-            `<p><strong>Pasos:</strong></p>
-             <ul>
-               <li>Instala Node.js (si ya hiciste la lección de Fundamentos, ya lo tienes).</li>
-               <li>En la terminal: <code>npx create-expo-app mi-primera-app</code></li>
-               <li>Entra a la carpeta: <code>cd mi-primera-app</code> y ejecuta <code>npx expo start</code></li>
-               <li>Instala la app <strong>Expo Go</strong> en tu celular (Play Store) y escanea el código QR que aparece en la terminal.</li>
-             </ul>`,
-            `<p>Cualquier cambio que guardes en el código se refleja al instante en tu celular — así puedes practicar sin recompilar todo el proyecto cada vez.</p>`,
-            `<p>Estructura mínima de una pantalla:</p>
-             <p><code>export default function App() { return &lt;View&gt;&lt;Text&gt;Hola&lt;/Text&gt;&lt;/View&gt;; }</code></p>`
+          id: "android-kotlin",
+          title: "android-kotlin/",
+          lessons: [
+            {
+              id: "android-primeros-pasos",
+              title: "01-primeros-pasos-android-studio.md",
+              status: "listo",
+              body: [
+                `<p>Si quieres control total sobre Android (rendimiento, acceso a hardware específico, integración profunda con el sistema), el camino nativo es <strong>Kotlin</strong> con <strong>Android Studio</strong>.</p>`,
+                `<p><strong>Instalación:</strong> descarga Android Studio (gratis, incluye el emulador de celular para probar sin usar tu propio teléfono).</p>`,
+                `<p><strong>Conceptos base que vas a usar todo el tiempo:</strong></p>
+                 <ul>
+                   <li><strong>Activity</strong>: una pantalla de la app.</li>
+                   <li><strong>Layout</strong>: cómo se organizan los elementos visuales.</li>
+                   <li><strong>Intent</strong>: cómo una pantalla le pasa información a otra.</li>
+                 </ul>`
+              ]
+            },
+            {
+              id: "android-jetpack-compose",
+              title: "02-jetpack-compose-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>Jetpack Compose</strong> es la forma moderna de construir interfaces en Android — declarativa, parecida en filosofía a React.</p>`,
+                `<pre class="code-block"><code>@Composable
+fun TarjetaUsuario(nombre: String, edad: Int) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = nombre, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        Text(text = "$edad años")
+        Button(onClick = { /* acción */ }) {
+            Text("Contactar")
+        }
+    }
+}</code></pre>`,
+                `<p><code>Column</code> apila elementos verticalmente, <code>Row</code> los pone en fila (equivalentes a <code>flexDirection</code> en React Native). Cada <code>@Composable</code> es una función reutilizable, igual que un componente de React.</p>`
+              ]
+            },
+            {
+              id: "android-navegacion",
+              title: "03-navegacion-entre-pantallas.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>val navController = rememberNavController()
+
+NavHost(navController = navController, startDestination = "inicio") {
+    composable("inicio") { PantallaInicio(navController) }
+    composable("perfil") { PantallaPerfil() }
+}
+
+// Para navegar desde PantallaInicio:
+// navController.navigate("perfil")</code></pre>`,
+                `<p>El patrón es casi idéntico al de React Navigation: defines rutas con nombre y navegas entre ellas llamando a una función. Si ya viste <strong>react-native/03</strong>, este concepto ya lo conoces.</p>`
+              ]
+            }
           ]
         },
         {
-          id: "android-nativo-kotlin",
-          title: "android-nativo-kotlin.md",
-          status: "listo",
-          body: [
-            `<p>Si quieres control total sobre Android (rendimiento, acceso a hardware específico, integración profunda con el sistema), el camino nativo es <strong>Kotlin</strong> con <strong>Android Studio</strong>.</p>`,
-            `<p><strong>Instalación:</strong> descarga Android Studio (gratis, incluye el emulador de celular para probar sin usar tu propio teléfono).</p>`,
-            `<p><strong>Conceptos base que vas a usar todo el tiempo:</strong></p>
-             <ul>
-               <li><strong>Activity</strong>: una pantalla de la app.</li>
-               <li><strong>Layout (XML o Jetpack Compose)</strong>: cómo se organizan los elementos visuales.</li>
-               <li><strong>Intent</strong>: cómo una pantalla le pasa información a otra.</li>
-             </ul>`,
-            `<p>Hoy en día se recomienda aprender directamente con <strong>Jetpack Compose</strong> (la forma moderna de construir interfaces en Android) en vez del sistema de XML antiguo.</p>`
+          id: "ios-swift",
+          title: "ios-swift/",
+          lessons: [
+            {
+              id: "ios-swiftui-basico",
+              title: "01-swift-y-swiftui.md",
+              status: "listo",
+              body: [
+                `<p>Para desarrollo nativo en iOS necesitas <strong>Swift</strong> y <strong>Xcode</strong> — y Xcode solo corre en macOS. Si no tienes una Mac, esta es la única ruta de las tres que no puedes hacer directamente desde Windows.</p>`,
+                `<p><strong>SwiftUI</strong> (la forma moderna de construir interfaces en iOS) se ve muy parecida a Jetpack Compose:</p>`,
+                `<pre class="code-block"><code>struct TarjetaUsuario: View {
+    var nombre: String
+    var edad: Int
+
+    var body: some View {
+        VStack {
+            Text(nombre).font(.title).bold()
+            Text("\\(edad) años")
+            Button("Contactar") {
+                // acción
+            }
+        }
+        .padding()
+    }
+}</code></pre>`,
+                `<p><strong>Alternativas si no tienes Mac:</strong> React Native con Expo puede compilar una app para iOS en la nube (EAS Build) sin necesitar una Mac física. Si sí tienes acceso a una Mac, "Swift Playgrounds" (gratis) es muy visual para empezar antes de saltar a Xcode.</p>`
+              ]
+            }
           ]
         },
         {
-          id: "ios-con-swift",
-          title: "ios-y-swift.md",
-          status: "listo",
-          body: [
-            `<p>Para desarrollo nativo en iOS necesitas <strong>Swift</strong> y <strong>Xcode</strong> — y Xcode solo corre en macOS. Si no tienes una Mac, esta es la única ruta de las tres que no puedes hacer directamente desde Windows.</p>`,
-            `<p><strong>Alternativas si no tienes Mac:</strong></p>
-             <ul>
-               <li><strong>React Native con Expo</strong>: puedes compilar una app para iOS en la nube (EAS Build) sin tener una Mac física.</li>
-               <li>Servicios de Mac en la nube (de pago) si en algún momento necesitas Xcode directamente.</li>
-             </ul>`,
-            `<p>Si sí tienes acceso a una Mac: instala Xcode desde la App Store, aprende Swift con los tutoriales oficiales de Apple ("Swift Playgrounds" es gratis y muy visual para empezar).</p>`
-          ]
-        },
-        {
-          id: "publicar-en-tiendas",
-          title: "publicar-en-play-store.md",
-          status: "listo",
-          body: [
-            `<p>Publicar tu app no es el paso final — es lo que la convierte en algo real que otros pueden usar. Para <strong>Google Play Store</strong>:</p>`,
-            `<ul>
-               <li>Crea una cuenta de desarrollador en Google Play Console (pago único, no es caro).</li>
-               <li>Genera el archivo <code>.aab</code> de tu app (con Expo: <code>eas build --platform android</code>).</li>
-               <li>Completa la ficha de la tienda: nombre, descripción, capturas de pantalla, ícono.</li>
-               <li>Sube el archivo y envíalo a revisión. Google la revisa en 1-3 días normalmente.</li>
-             </ul>`,
-            `<p>Para <strong>App Store</strong> (iOS) el proceso es similar pero la cuenta de desarrollador es anual y la revisión de Apple suele ser más estricta con el diseño y la funcionalidad.</p>`,
-            `<p>Consejo: publica una versión simple y funcional primero. Es mejor tener algo real afuera que perfeccionar una app que nadie ha usado todavía.</p>`
+          id: "publicacion-moviles",
+          title: "publicacion/",
+          lessons: [
+            {
+              id: "publicar-play-store",
+              title: "01-publicar-en-play-store.md",
+              status: "listo",
+              body: [
+                `<p>Publicar tu app no es el paso final — es lo que la convierte en algo real que otros pueden usar. Para <strong>Google Play Store</strong>:</p>`,
+                `<ul>
+                   <li>Crea una cuenta de desarrollador en Google Play Console (pago único, no es caro).</li>
+                   <li>Genera el archivo <code>.aab</code> de tu app (con Expo: <code>eas build --platform android</code>).</li>
+                   <li>Completa la ficha de la tienda: nombre, descripción, capturas de pantalla, ícono.</li>
+                   <li>Sube el archivo y envíalo a revisión. Google la revisa en 1-3 días normalmente.</li>
+                 </ul>`,
+                `<p>Consejo: publica una versión simple y funcional primero. Es mejor tener algo real afuera que perfeccionar una app que nadie ha usado todavía.</p>`
+              ]
+            },
+            {
+              id: "publicar-app-store",
+              title: "02-publicar-en-app-store.md",
+              status: "listo",
+              body: [
+                `<p>Para <strong>App Store</strong> (iOS) el proceso es similar al de Google Play, con algunas diferencias importantes:</p>`,
+                `<ul>
+                   <li>La cuenta de desarrollador de Apple es <strong>anual</strong> (no pago único como Google).</li>
+                   <li>Necesitas Xcode (o EAS Build en la nube) para generar el archivo <code>.ipa</code>.</li>
+                   <li>La revisión de Apple suele ser más estricta con el diseño y la funcionalidad — rechazan apps por detalles que Google normalmente deja pasar.</li>
+                   <li>Se sube a través de <strong>App Store Connect</strong>, donde también completas ficha, capturas y descripción.</li>
+                 </ul>`,
+                `<p>Tiempo de revisión típico: 1-3 días, aunque puede tardar más si hay observaciones que corregir y reenviar.</p>`
+              ]
+            }
           ]
         }
       ]
@@ -1523,13 +1712,233 @@ const clave = process.env.JWT_SECRET;</code></pre>`,
       id: "apps-escritorio",
       icon: "📁",
       title: "04 · Apps de escritorio",
-      description: "Programas para Windows, macOS y Linux.",
+      description: "Electron, Python y C#/.NET para programas de Windows, macOS y Linux.",
       lessons: [
         {
-          id: "opciones-escritorio",
-          title: "por-donde-empezar.md",
-          status: "pendiente",
-          body: [`<p>🔧 En construcción — cubrirá: Electron (JS), .NET/WPF (C#), y Python con PyQt/Tkinter para herramientas rápidas.</p>`]
+          id: "panorama-escritorio",
+          title: "00-panorama-general.md",
+          status: "listo",
+          body: [
+            `<p>Tres caminos según lo que ya sepas y lo que necesites:</p>`,
+            `<ul>
+               <li><strong>Electron</strong> (JavaScript): si ya sabes web, reutilizas todo ese conocimiento. Apps como VS Code, Discord y Slack están hechas así. Contra: consume más memoria RAM.</li>
+               <li><strong>Python (Tkinter/PyQt)</strong>: la forma más simple y rápida para herramientas internas o scripts con interfaz — no pensadas para venderse como producto pulido.</li>
+               <li><strong>C# con .NET/WPF</strong>: rendimiento nativo real en Windows, es lo que usan la mayoría de programas empresariales de escritorio en ese sistema.</li>
+             </ul>`,
+            `<p>Si vienes de las carpetas anteriores de este curso, <strong>Electron</strong> es el salto más natural — mismo HTML/CSS/JS, solo cambia dónde corre.</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "electron",
+          title: "electron/",
+          lessons: [
+            {
+              id: "electron-primeros-pasos",
+              title: "01-primeros-pasos.md",
+              status: "listo",
+              body: [
+                `<p>Electron empaqueta Chromium (el motor de Chrome) y Node.js juntos — tu app de escritorio es, por dentro, una página web con superpoderes de sistema operativo.</p>`,
+                `<pre class="code-block"><code>// npm init -y
+// npm install electron --save-dev
+
+// main.js — el "proceso principal", controla la ventana
+const { app, BrowserWindow } = require("electron");
+
+function crearVentana() {
+  const ventana = new BrowserWindow({ width: 900, height: 600 });
+  ventana.loadFile("index.html"); // tu HTML normal
+}
+
+app.whenReady().then(crearVentana);</code></pre>`,
+                `<p>Ejecuta con <code>npx electron .</code>. El archivo <code>index.html</code> que cargas es HTML/CSS/JS común — todo lo que aprendiste en la carpeta de <strong>páginas web</strong> aplica directo aquí.</p>`
+              ]
+            },
+            {
+              id: "electron-ipc",
+              title: "02-comunicacion-entre-procesos.md",
+              status: "listo",
+              body: [
+                `<p>Electron separa dos "mundos": el <strong>proceso principal</strong> (Node.js, controla la app y el sistema operativo) y el <strong>proceso de renderizado</strong> (tu página web, sin acceso directo al sistema por seguridad). Se comunican con <strong>IPC</strong>.</p>`,
+                `<pre class="code-block"><code>// main.js
+const { ipcMain } = require("electron");
+ipcMain.handle("guardar-archivo", (event, contenido) =&gt; {
+  require("fs").writeFileSync("nota.txt", contenido);
+  return "Guardado";
+});</code></pre>`,
+                `<pre class="code-block"><code>// En tu HTML/JS (a través de un preload.js seguro):
+const resultado = await window.electronAPI.guardarArchivo("Hola mundo");
+console.log(resultado); // "Guardado"</code></pre>`,
+                `<p>Esta separación existe por seguridad: si tu página cargara contenido externo, no quieres que tenga acceso directo a los archivos del usuario. El <code>preload.js</code> expone solo las funciones específicas que tú decidas.</p>`
+              ]
+            },
+            {
+              id: "electron-sistema-archivos",
+              title: "03-acceso-al-sistema-de-archivos.md",
+              status: "listo",
+              body: [
+                `<p>Lo que distingue a una app de escritorio de una web es justamente esto: leer/guardar archivos reales, y usar diálogos nativos del sistema operativo.</p>`,
+                `<pre class="code-block"><code>const { dialog } = require("electron");
+const fs = require("fs");
+
+ipcMain.handle("abrir-archivo", async () =&gt; {
+  const resultado = await dialog.showOpenDialog({
+    properties: ["openFile"],
+    filters: [{ name: "Texto", extensions: ["txt"] }]
+  });
+  if (resultado.canceled) return null;
+  return fs.readFileSync(resultado.filePaths[0], "utf-8");
+});</code></pre>`,
+                `<p><code>dialog.showOpenDialog</code> abre el selector de archivos nativo de Windows/Mac/Linux — se ve y se siente como cualquier otro programa del sistema, no como una página web.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "python-escritorio",
+          title: "python/",
+          lessons: [
+            {
+              id: "python-tkinter",
+              title: "01-tkinter-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>Tkinter</strong> viene incluido con Python — no necesitas instalar nada extra. Ideal para herramientas simples y rápidas de construir.</p>`,
+                `<pre class="code-block"><code>import tkinter as tk
+
+def saludar():
+    etiqueta.config(text="Hola, " + entrada.get())
+
+ventana = tk.Tk()
+ventana.title("Mi primera app")
+ventana.geometry("300x200")
+
+entrada = tk.Entry(ventana)
+entrada.pack(pady=10)
+
+boton = tk.Button(ventana, text="Saludar", command=saludar)
+boton.pack()
+
+etiqueta = tk.Label(ventana, text="")
+etiqueta.pack()
+
+ventana.mainloop()</code></pre>`,
+                `<p><code>.pack()</code> es la forma más simple de organizar elementos (existen también <code>.grid()</code> para cuadrículas). <code>command=saludar</code> conecta el botón a una función — el equivalente a <code>addEventListener</code> en JS.</p>`
+              ]
+            },
+            {
+              id: "python-pyqt",
+              title: "02-pyqt-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>PyQt</strong> (o su versión libre, PySide) produce interfaces con apariencia mucho más moderna y nativa que Tkinter — la opción preferida cuando el diseño importa.</p>`,
+                `<pre class="code-block"><code># pip install PyQt6 --break-system-packages
+
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLabel
+
+app = QApplication([])
+ventana = QWidget()
+ventana.setWindowTitle("Mi app con PyQt")
+
+layout = QVBoxLayout()
+etiqueta = QLabel("Presiona el botón")
+boton = QPushButton("Haz clic")
+boton.clicked.connect(lambda: etiqueta.setText("¡Clic detectado!"))
+
+layout.addWidget(etiqueta)
+layout.addWidget(boton)
+ventana.setLayout(layout)
+ventana.show()
+app.exec()</code></pre>`,
+                `<p><code>.clicked.connect(funcion)</code> es el equivalente de PyQt a los eventos que ya viste en JS. Los <code>Layout</code> (<code>QVBoxLayout</code> = vertical, <code>QHBoxLayout</code> = horizontal) organizan los elementos, parecido a flexbox.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "csharp-dotnet",
+          title: "csharp-dotnet/",
+          lessons: [
+            {
+              id: "dotnet-primeros-pasos",
+              title: "01-primeros-pasos-wpf.md",
+              status: "listo",
+              body: [
+                `<p><strong>WPF</strong> (Windows Presentation Foundation) es el framework de escritorio más usado en el mundo empresarial de Windows, con <strong>C#</strong>. Se instala como parte de Visual Studio (gratis, versión Community).</p>`,
+                `<p>Una app de WPF se divide en dos archivos por cada ventana: un <strong>XAML</strong> (el diseño visual) y un <strong>C#</strong> (la lógica), muy parecido a separar HTML y JavaScript.</p>`,
+                `<pre class="code-block"><code>// MainWindow.xaml.cs — la lógica
+private void Boton_Click(object sender, RoutedEventArgs e)
+{
+    Etiqueta.Text = "Hola, " + CajaTexto.Text;
+}</code></pre>`
+              ]
+            },
+            {
+              id: "dotnet-xaml",
+              title: "02-xaml-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>XAML</strong> describe la interfaz de forma declarativa, muy parecido a HTML pero con etiquetas propias de .NET:</p>`,
+                `<pre class="code-block"><code>&lt;Window x:Class="MiApp.MainWindow"
+        Title="Mi primera app" Height="300" Width="400"&gt;
+    &lt;StackPanel Margin="20"&gt;
+        &lt;TextBox x:Name="CajaTexto" Margin="0,0,0,10"/&gt;
+        &lt;Button Content="Saludar" Click="Boton_Click"/&gt;
+        &lt;TextBlock x:Name="Etiqueta" Margin="0,10,0,0"/&gt;
+    &lt;/StackPanel&gt;
+&lt;/Window&gt;</code></pre>`,
+                `<p><code>StackPanel</code> apila elementos (como <code>Column</code> en Compose o <code>View</code> con flex en React Native). <code>x:Name</code> le da un identificador al elemento para poder referenciarlo desde el código C#, y <code>Click="Boton_Click"</code> lo conecta directamente a un método.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "empaquetado",
+          title: "empaquetado/",
+          lessons: [
+            {
+              id: "empaquetar-electron",
+              title: "01-empaquetar-electron.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>// npm install electron-builder --save-dev
+
+// package.json
+{
+  "build": {
+    "appId": "com.joseph.miapp",
+    "win": { "target": "nsis" },
+    "mac": { "target": "dmg" }
+  },
+  "scripts": {
+    "dist": "electron-builder"
+  }
+}</code></pre>`,
+                `<p>Corre <code>npm run dist</code> y obtienes un instalador real (<code>.exe</code> en Windows, <code>.dmg</code> en Mac) que cualquiera puede descargar y ejecutar como cualquier otro programa, sin necesitar Node.js instalado.</p>`
+              ]
+            },
+            {
+              id: "empaquetar-python",
+              title: "02-empaquetar-python.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code># pip install pyinstaller --break-system-packages
+
+pyinstaller --onefile --windowed mi_app.py</code></pre>`,
+                `<p>Esto genera un <code>.exe</code> (en Windows) que incluye Python empaquetado adentro — el usuario final no necesita tener Python instalado para correrlo. <code>--windowed</code> evita que se abra una ventana de terminal negra detrás de tu interfaz.</p>`
+              ]
+            },
+            {
+              id: "empaquetar-dotnet",
+              title: "03-empaquetar-dotnet.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>dotnet publish -c Release -r win-x64 --self-contained true</code></pre>`,
+                `<p><code>--self-contained true</code> incluye el runtime de .NET dentro del ejecutable — igual que con PyInstaller, el usuario no necesita instalar nada extra para correr tu programa.</p>`
+              ]
+            }
+          ]
         }
       ]
     },
@@ -1537,17 +1946,204 @@ const clave = process.env.JWT_SECRET;</code></pre>`,
       id: "videojuegos",
       icon: "📁",
       title: "05 · Videojuegos",
-      description: "Motores, lógica de juego y publicación.",
+      description: "Godot, Unity y Roblox Studio — motor, lógica de juego y publicación.",
       lessons: [
         {
           id: "eleccion-motor",
-          title: "que-motor-usar.md",
+          title: "00-que-motor-usar.md",
           status: "listo",
           body: [
             `<p><strong>Godot</strong>: gratuito, ligero, ideal para empezar y para juegos 2D. Usa su propio lenguaje (GDScript, parecido a Python).</p>`,
             `<p><strong>Unity</strong>: el más usado en la industria, C#, buena documentación, ecosistema enorme de assets.</p>`,
             `<p><strong>Roblox Studio</strong>: si tu objetivo es publicar rápido y llegar a jugadores ya dentro de la plataforma (Lua como lenguaje).</p>`,
             `<p>Empieza con un juego pequeño y terminado (un Pong, un plataformero de 3 niveles) antes de intentar tu "juego soñado". Terminar es la habilidad más difícil.</p>`
+          ]
+        },
+        {
+          id: "conceptos-universales",
+          title: "01-conceptos-que-aplican-a-todos.md",
+          status: "listo",
+          body: [
+            `<p>Antes de meterte a un motor específico, estas ideas se repiten en <strong>todos</strong> los motores de videojuegos:</p>`,
+            `<ul>
+               <li><strong>Game loop</strong>: el juego actualiza su estado y redibuja la pantalla decenas de veces por segundo, en bucle constante, mientras esté abierto.</li>
+               <li><strong>Delta time</strong>: el tiempo transcurrido desde el último fotograma — se usa para que el movimiento sea igual de rápido sin importar si la computadora es lenta o rápida.</li>
+               <li><strong>Sprite</strong>: una imagen 2D que representa a un personaje u objeto en pantalla.</li>
+               <li><strong>Colisión (hitbox)</strong>: una forma invisible que el motor usa para detectar cuándo dos objetos se tocan.</li>
+               <li><strong>Escena/Prefab</strong>: una plantilla reutilizable de un objeto (un enemigo, una moneda) que puedes duplicar muchas veces.</li>
+             </ul>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "godot",
+          title: "godot/",
+          lessons: [
+            {
+              id: "godot-primeros-pasos",
+              title: "01-primeros-pasos.md",
+              status: "listo",
+              body: [
+                `<p>Descarga Godot (gratis, sin instalación — es un solo ejecutable). Un proyecto se organiza en <strong>escenas</strong>, y cada escena en <strong>nodos</strong> (personajes, sprites, sonidos, cámaras).</p>`,
+                `<p><strong>Estructura típica de un personaje jugable:</strong></p>
+                 <ul>
+                   <li><code>CharacterBody2D</code> — el nodo raíz, maneja movimiento y colisiones</li>
+                   <li><code>Sprite2D</code> — la imagen visible del personaje</li>
+                   <li><code>CollisionShape2D</code> — la forma invisible de colisión</li>
+                 </ul>`
+              ]
+            },
+            {
+              id: "godot-gdscript",
+              title: "02-gdscript-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>GDScript</strong> se parece mucho a Python — indentación en vez de llaves, sintaxis simple.</p>`,
+                `<pre class="code-block"><code>extends CharacterBody2D
+
+var velocidad = 200
+
+func _physics_process(delta):
+    var direccion = Vector2.ZERO
+    if Input.is_action_pressed("ui_right"):
+        direccion.x += 1
+    if Input.is_action_pressed("ui_left"):
+        direccion.x -= 1
+
+    velocity = direccion * velocidad
+    move_and_slide()</code></pre>`,
+                `<p><code>_physics_process(delta)</code> se ejecuta automáticamente en cada fotograma físico — aquí es donde va la lógica de movimiento. <code>move_and_slide()</code> mueve al personaje y resuelve colisiones automáticamente.</p>`
+              ]
+            },
+            {
+              id: "godot-fisica-colisiones",
+              title: "03-fisica-y-colisiones.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>func _on_area_2d_body_entered(body):
+    if body.name == "Jugador":
+        print("¡El jugador tocó esta área!")
+        queue_free() # elimina este objeto (por ejemplo, una moneda recogida)</code></pre>`,
+                `<p>Las señales (<code>signal</code>) son el sistema de eventos de Godot — <code>body_entered</code> se dispara sola cuando algo entra en un <code>Area2D</code>. Es el equivalente a <code>addEventListener</code> en JavaScript: te conectas a la señal desde el editor o por código, y Godot llama tu función cuando ocurre.</p>`
+              ]
+            },
+            {
+              id: "godot-sonido-animacion",
+              title: "04-sonido-y-animacion.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>extends AnimatedSprite2D
+
+func _process(delta):
+    if Input.is_action_pressed("ui_right"):
+        play("caminar")
+    else:
+        play("quieto")
+
+$AudioStreamPlayer2D.play() # reproducir un efecto de sonido</code></pre>`,
+                `<p><code>AnimatedSprite2D</code> maneja hojas de sprites con varios cuadros de animación (caminar, saltar, atacar) que cambias con <code>play("nombre")</code>. <code>AudioStreamPlayer2D</code> reproduce efectos de sonido posicionados en el espacio del juego.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "unity",
+          title: "unity/",
+          lessons: [
+            {
+              id: "unity-primeros-pasos",
+              title: "01-primeros-pasos.md",
+              status: "listo",
+              body: [
+                `<p>Instala Unity a través de <strong>Unity Hub</strong> (el gestor de versiones). Un proyecto se organiza en <strong>GameObjects</strong> dentro de una escena, cada uno con <strong>Components</strong> (Transform, Sprite Renderer, Collider, Script) adjuntos.</p>`,
+                `<p>Todo GameObject tiene siempre un <code>Transform</code> (posición, rotación, escala) — es el único componente que no se puede quitar.</p>`
+              ]
+            },
+            {
+              id: "unity-csharp",
+              title: "02-scripts-en-csharp.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>using UnityEngine;
+
+public class Movimiento : MonoBehaviour
+{
+    public float velocidad = 5f;
+
+    void Update()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        transform.Translate(Vector3.right * horizontal * velocidad * Time.deltaTime);
+    }
+}</code></pre>`,
+                `<p><code>Update()</code> se ejecuta en cada fotograma — es el "game loop" de Unity. <code>Time.deltaTime</code> es el equivalente exacto al "delta time" que viste en conceptos universales: multiplicar por él hace que el movimiento sea igual de rápido en cualquier computadora.</p>`
+              ]
+            },
+            {
+              id: "unity-fisica-colisiones",
+              title: "03-fisica-y-colisiones.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>void OnTriggerEnter2D(Collider2D otro)
+{
+    if (otro.CompareTag("Moneda"))
+    {
+        Destroy(otro.gameObject);
+        Debug.Log("Moneda recogida");
+    }
+}</code></pre>`,
+                `<p><code>OnTriggerEnter2D</code> se llama automáticamente cuando dos <code>Collider</code> con "Is Trigger" activado se tocan. <code>CompareTag</code> identifica qué objeto específico chocó, usando etiquetas que asignas desde el editor.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "roblox-studio",
+          title: "roblox-studio/",
+          lessons: [
+            {
+              id: "roblox-primeros-pasos",
+              title: "01-primeros-pasos.md",
+              status: "listo",
+              body: [
+                `<p>Roblox Studio es gratis y ya viene con jugadores dentro de la plataforma esperando probar tu juego — la ventaja más grande frente a Godot/Unity es la distribución instantánea.</p>`,
+                `<p>Todo se organiza en el <strong>Explorer</strong>: <code>Workspace</code> (lo que existe en el mundo del juego), <code>Players</code>, y los <strong>Scripts</strong> que le dan comportamiento a las partes.</p>`
+              ]
+            },
+            {
+              id: "roblox-lua",
+              title: "02-scripting-en-lua.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>local parte = script.Parent
+
+parte.Touched:Connect(function(otraParte)
+    local jugador = game.Players:GetPlayerFromCharacter(otraParte.Parent)
+    if jugador then
+        print(jugador.Name .. " tocó la parte")
+        parte:Destroy()
+    end
+end)</code></pre>`,
+                `<p><strong>Lua</strong> usa <code>local</code> para variables, <code>function...end</code> en vez de llaves, y <code>Touched:Connect()</code> es su sistema de eventos — el mismo concepto de "señal" que ya viste en Godot y "evento" que viste en JS, con otro nombre.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "publicacion-juegos",
+          title: "publicacion/",
+          lessons: [
+            {
+              id: "publicar-juego",
+              title: "01-publicar-tu-juego.md",
+              status: "listo",
+              body: [
+                `<p><strong>Godot/Unity:</strong> exporta a <code>.exe</code> (Windows) o web (HTML5) desde el propio editor, y sube el resultado gratis a <strong>itch.io</strong> — la plataforma más amigable para publicar tu primer juego.</p>`,
+                `<p><strong>Steam:</strong> requiere una cuota única (~$100) por juego publicado — vale la pena solo cuando ya tienes un proyecto pulido y terminado.</p>`,
+                `<p><strong>Roblox:</strong> se publica directo desde el editor con el botón "Publish to Roblox" — no hay paso de exportación, queda disponible al instante para cualquiera en la plataforma.</p>`
+              ]
+            }
           ]
         }
       ]
@@ -1556,21 +2152,255 @@ const clave = process.env.JWT_SECRET;</code></pre>`,
       id: "inteligencia-artificial",
       icon: "📁",
       title: "06 · Inteligencia artificial",
-      description: "Crear, modificar y usar bien modelos e IA.",
+      description: "Usar IA para programar, construir con APIs de IA, y las bases de machine learning.",
       lessons: [
         {
-          id: "usar-bien-la-ia",
-          title: "usar-bien-la-ia.md",
+          id: "panorama-ia",
+          title: "00-panorama-general.md",
           status: "listo",
           body: [
-            `<p>Usar IA para programar (como Claude) es una herramienta, no un atajo para no aprender. La forma correcta de usarla:</p>
-             <ul>
-               <li>Pide que <strong>te explique</strong> el código, no solo que lo genere.</li>
-               <li>Escribe tú primero un intento, aunque esté mal, y luego compara.</li>
-               <li>Usa la IA para revisar y encontrar errores en código que ya escribiste.</li>
-               <li>Nunca pegues código que no entiendes en un proyecto real.</li>
+            `<p>"IA" cubre varias cosas distintas que conviene separar:</p>`,
+            `<ul>
+               <li><strong>Usar IA como herramienta</strong> para programar mejor y más rápido (carpeta <code>usar-ia-para-programar/</code>).</li>
+               <li><strong>Construir apps que usan IA</strong> por dentro, llamando a un modelo ya entrenado por API (carpeta <code>apis-de-ia/</code>) — la ruta más práctica y rápida de tener algo funcionando.</li>
+               <li><strong>Entrenar tus propios modelos</strong> desde cero con machine learning (carpetas <code>python-para-ia/</code>, <code>machine-learning/</code> y <code>redes-neuronales/</code>) — más matemático, más lento de aprender, pero es la base real detrás de todo lo anterior.</li>
              </ul>`,
-            `<p><em>Próximos temas: entrenar/ajustar modelos (fine-tuning), usar APIs de modelos en tus propias apps, y conceptos base de machine learning.</em></p>`
+            `<p>Si tu meta es construir productos pronto, empieza por <strong>apis-de-ia/</strong>. Si tu meta es entender cómo funciona por dentro, empieza por <strong>python-para-ia/</strong>.</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "usar-ia-para-programar",
+          title: "usar-ia-para-programar/",
+          lessons: [
+            {
+              id: "ia-como-herramienta",
+              title: "01-como-usarla-bien.md",
+              status: "listo",
+              body: [
+                `<p>Usar IA para programar (como Claude) es una herramienta, no un atajo para no aprender. La forma correcta de usarla:</p>
+                 <ul>
+                   <li>Pide que <strong>te explique</strong> el código, no solo que lo genere.</li>
+                   <li>Escribe tú primero un intento, aunque esté mal, y luego compara.</li>
+                   <li>Usa la IA para revisar y encontrar errores en código que ya escribiste.</li>
+                   <li>Nunca pegues código que no entiendes en un proyecto real.</li>
+                 </ul>`
+              ]
+            },
+            {
+              id: "ia-prompts-efectivos",
+              title: "02-como-pedir-ayuda-bien.md",
+              status: "listo",
+              body: [
+                `<p>La calidad de lo que obtienes de una IA depende directamente de cómo preguntas. Compara:</p>`,
+                `<pre class="code-block"><code>❌ "no me funciona mi código"
+
+✅ "Tengo esta función en JavaScript que debería sumar dos números
+   pero me devuelve NaN. Este es el código: [pega el código].
+   Este es el error exacto que veo en consola: [pega el error].
+   Ya revisé que ambos argumentos sean números."</code></pre>`,
+                `<p>Entre más contexto específico das (código real, error real, qué ya intentaste), menos tiene que adivinar la IA — y menos vueltas das tú corrigiendo respuestas genéricas.</p>`
+              ]
+            },
+            {
+              id: "ia-limitaciones",
+              title: "03-limitaciones-y-errores-comunes.md",
+              status: "listo",
+              body: [
+                `<p>Las IAs pueden inventar información con total confianza (a esto se le llama <strong>"alucinación"</strong>) — nombres de funciones que no existen, librerías inventadas, comportamientos incorrectos. Por eso:</p>`,
+                `<ul>
+                   <li>Verifica funciones o librerías poco comunes en la documentación oficial antes de confiar en ellas.</li>
+                   <li>Prueba el código real, no asumas que "se ve bien" y por eso funciona.</li>
+                   <li>Para librerías o versiones muy recientes, la IA puede tener información desactualizada — revisa la fecha de la documentación que consultas.</li>
+                 </ul>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "apis-de-ia",
+          title: "apis-de-ia/",
+          lessons: [
+            {
+              id: "apis-ia-que-son",
+              title: "01-que-son-y-como-conectarte.md",
+              status: "listo",
+              body: [
+                `<p>Empresas como Anthropic (Claude) u OpenAI exponen sus modelos ya entrenados a través de una <strong>API</strong> — igual que las APIs que ya usaste con <code>fetch</code>, solo que esta te devuelve texto generado por un modelo de lenguaje.</p>`,
+                `<pre class="code-block"><code>// Node.js, usando fetch normal — sin librerías extra
+const respuesta = await fetch("https://api.anthropic.com/v1/messages", {
+  method: "POST",
+  headers: {
+    "x-api-key": process.env.CLAUDE_API_KEY,
+    "content-type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "claude-sonnet-4-6",
+    max_tokens: 500,
+    messages: [{ role: "user", content: "Explica qué es una API en 2 líneas" }]
+  })
+});
+
+const datos = await respuesta.json();
+console.log(datos.content[0].text);</code></pre>`,
+                `<p>La clave (<code>CLAUDE_API_KEY</code>) siempre va en una variable de entorno, nunca escrita directo en el código — exactamente la misma regla de seguridad que ya viste en la carpeta de <strong>despliegue</strong> de aplicaciones web.</p>`
+              ]
+            },
+            {
+              id: "apis-ia-construir-features",
+              title: "02-que-puedes-construir-con-esto.md",
+              status: "listo",
+              body: [
+                `<p>Con una API de IA conectada a tu backend (los que aprendiste en <strong>node-express/</strong>), puedes agregar funciones reales a tus propias apps:</p>`,
+                `<ul>
+                   <li>Un chatbot de soporte dentro de tu propia página web.</li>
+                   <li>Generar automáticamente un resumen de un texto largo que el usuario pega.</li>
+                   <li>Clasificar mensajes o reseñas por sentimiento (positivo/negativo).</li>
+                   <li>Traducir contenido a otro idioma sin salir de tu app.</li>
+                 </ul>`,
+                `<p>El patrón es siempre el mismo: tu frontend le manda al backend lo que el usuario escribió → el backend le agrega instrucciones (el "prompt") y lo reenvía a la API de IA → la respuesta regresa al usuario. Nunca conectes el frontend directo a la API de IA — expondrías tu clave secreta a cualquiera que abra el inspector del navegador.</p>`
+              ]
+            },
+            {
+              id: "apis-ia-prompt-engineering",
+              title: "03-diseñar-prompts-en-tu-app.md",
+              status: "listo",
+              body: [
+                `<p>Cuando la IA es parte de tu app (no un chat directo con el usuario), tú controlas exactamente qué instrucciones recibe — a esto se le llama <strong>prompt engineering</strong>.</p>`,
+                `<pre class="code-block"><code>const prompt = \`Eres un asistente que resume texto en español.
+Reglas:
+- Máximo 3 oraciones.
+- No agregues opiniones, solo resume.
+
+Texto a resumir: "\${textoDelUsuario}"\`;</code></pre>`,
+                `<p>Dar instrucciones claras, ejemplos, y reglas explícitas de formato (como aquí) hace que la respuesta sea consistente y predecible — clave para que una función de tu app funcione igual cada vez que un usuario la use.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "python-para-ia",
+          title: "python-para-ia/",
+          lessons: [
+            {
+              id: "numpy-basico",
+              title: "01-numpy-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>NumPy</strong> es la base de casi todo el machine learning en Python — trabaja con arreglos numéricos de forma mucho más rápida que las listas normales de Python.</p>`,
+                `<pre class="code-block"><code># pip install numpy --break-system-packages
+import numpy as np
+
+numeros = np.array([1, 2, 3, 4, 5])
+print(numeros * 2)          # [2 4 6 8 10] — opera sobre todo el arreglo a la vez
+print(numeros.mean())       # promedio: 3.0
+print(numeros.max())        # máximo: 5
+
+matriz = np.array([[1, 2], [3, 4]])
+print(matriz.shape)         # (2, 2) — filas, columnas</code></pre>`,
+                `<p>La diferencia clave con una lista normal de Python: <code>numeros * 2</code> multiplica cada elemento automáticamente, sin necesitar un bucle <code>for</code>. Esto se llama "operación vectorizada" y es mucho más rápido para datasets grandes.</p>`
+              ]
+            },
+            {
+              id: "pandas-basico",
+              title: "02-pandas-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>Pandas</strong> maneja datos en tablas (como una hoja de Excel) — es la herramienta estándar para limpiar y explorar datos antes de entrenar cualquier modelo.</p>`,
+                `<pre class="code-block"><code># pip install pandas --break-system-packages
+import pandas as pd
+
+df = pd.read_csv("datos.csv")
+print(df.head())          # primeras 5 filas
+print(df["edad"].mean())   # promedio de una columna
+print(df[df["edad"] &gt; 18]) # filtrar filas
+
+df["edad_en_meses"] = df["edad"] * 12 # crear una columna nueva</code></pre>`,
+                `<p><code>DataFrame</code> (lo que devuelve <code>pd.read_csv</code>) es la estructura central de Pandas — piensa en ella como una tabla de base de datos que vive en memoria, con filtros y cálculos muy rápidos de escribir.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "machine-learning",
+          title: "machine-learning/",
+          lessons: [
+            {
+              id: "ml-conceptos",
+              title: "01-conceptos-base.md",
+              status: "listo",
+              body: [
+                `<p><strong>Machine learning</strong> es hacer que una computadora encuentre patrones en datos por sí misma, en vez de programar reglas explícitas a mano.</p>`,
+                `<ul>
+                   <li><strong>Aprendizaje supervisado</strong>: le das ejemplos con la respuesta correcta ya incluida (fotos etiquetadas "gato"/"perro"), y el modelo aprende a predecir la respuesta en ejemplos nuevos.</li>
+                   <li><strong>Aprendizaje no supervisado</strong>: no hay respuesta correcta dada — el modelo encuentra agrupaciones o patrones por sí solo (agrupar clientes parecidos, por ejemplo).</li>
+                   <li><strong>Entrenamiento</strong>: el proceso de ajustar el modelo con datos de ejemplo.</li>
+                   <li><strong>Overfitting</strong>: cuando el modelo "memoriza" los datos de entrenamiento en vez de aprender el patrón general, y falla con datos nuevos.</li>
+                 </ul>`
+              ]
+            },
+            {
+              id: "ml-scikit-learn",
+              title: "02-tu-primer-modelo-con-scikit-learn.md",
+              status: "listo",
+              body: [
+                `<p><strong>scikit-learn</strong> es la librería más simple para empezar a entrenar modelos reales, sin escribir las matemáticas desde cero.</p>`,
+                `<pre class="code-block"><code># pip install scikit-learn --break-system-packages
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+
+# X = características (por ejemplo, tamaño y peso de una fruta)
+# y = la respuesta correcta (el tipo de fruta)
+X_entreno, X_prueba, y_entreno, y_prueba = train_test_split(X, y, test_size=0.2)
+
+modelo = DecisionTreeClassifier()
+modelo.fit(X_entreno, y_entreno)          # entrena
+
+precision = modelo.score(X_prueba, y_prueba) # evalúa qué tan bien predice
+prediccion = modelo.predict([[150, 6]])      # predice un caso nuevo</code></pre>`,
+                `<p><code>train_test_split</code> separa tus datos en dos grupos: uno para entrenar y otro que el modelo nunca vio, para comprobar honestamente qué tan bien aprendió (y detectar overfitting).</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "redes-neuronales",
+          title: "redes-neuronales/",
+          lessons: [
+            {
+              id: "redes-conceptos",
+              title: "01-que-es-una-red-neuronal.md",
+              status: "listo",
+              body: [
+                `<p>Una red neuronal es un modelo inspirado (de forma muy simplificada) en cómo funcionan las neuronas del cerebro: capas de "nodos" conectados, donde cada conexión tiene un peso que se ajusta durante el entrenamiento.</p>`,
+                `<ul>
+                   <li><strong>Capa de entrada</strong>: recibe los datos (por ejemplo, los píxeles de una imagen).</li>
+                   <li><strong>Capas ocultas</strong>: donde ocurre el procesamiento — más capas y nodos permiten aprender patrones más complejos.</li>
+                   <li><strong>Capa de salida</strong>: da la predicción final (por ejemplo, qué dígito es en una imagen de 0-9).</li>
+                 </ul>`,
+                `<p>Los modelos de lenguaje grandes (como Claude) son, en el fondo, redes neuronales enormes entrenadas con cantidades masivas de texto — la misma idea base, escalada a un tamaño gigantesco.</p>`
+              ]
+            },
+            {
+              id: "redes-tensorflow",
+              title: "02-tu-primera-red-con-tensorflow.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code># pip install tensorflow --break-system-packages
+import tensorflow as tf
+
+modelo = tf.keras.Sequential([
+    tf.keras.layers.Dense(16, activation="relu", input_shape=(4,)),
+    tf.keras.layers.Dense(8, activation="relu"),
+    tf.keras.layers.Dense(3, activation="softmax")
+])
+
+modelo.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
+modelo.fit(X_entreno, y_entreno, epochs=20)</code></pre>`,
+                `<p><code>Dense</code> es una capa donde cada nodo se conecta con todos los de la capa anterior. <code>epochs</code> es cuántas veces el modelo revisa el set de datos completo durante el entrenamiento — muy pocas y no aprende lo suficiente, demasiadas y cae en overfitting.</p>`
+              ]
+            }
           ]
         }
       ]
@@ -1579,13 +2409,683 @@ const clave = process.env.JWT_SECRET;</code></pre>`,
       id: "recursos",
       icon: "📁",
       title: "07 · Herramientas y recursos",
-      description: "Git, terminal, buenas prácticas y hábitos de estudio.",
+      description: "Git/GitHub, terminal y buenas prácticas — lo que usas todos los días sin importar qué construyas.",
       lessons: [
         {
-          id: "git-basico",
-          title: "git-lo-esencial.md",
-          status: "pendiente",
-          body: [`<p>🔧 En construcción — cubrirá: comandos esenciales de Git, flujo de trabajo con GitHub, y cómo no perder tu código nunca.</p>`]
+          id: "panorama-recursos",
+          title: "00-panorama-general.md",
+          status: "listo",
+          body: [
+            `<p>Esta carpeta no enseña un lenguaje — enseña las <strong>herramientas de trabajo</strong> que vas a usar sin importar si haces páginas web, apps móviles o videojuegos. Git en particular ya lo usaste de verdad para publicar este mismo foro, así que aquí está explicado con calma todo lo que pasó en ese proceso.</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "git-github",
+          title: "git-y-github/",
+          lessons: [
+            {
+              id: "git-que-es",
+              title: "01-que-es-git-y-por-que-importa.md",
+              status: "listo",
+              body: [
+                `<p><strong>Git</strong> guarda el historial completo de tu código — cada cambio que confirmas queda registrado, así que siempre puedes volver atrás si algo se rompe. <strong>GitHub</strong> es un sitio que aloja tus repositorios de Git en la nube (hay otros: GitLab, Bitbucket).</p>`,
+                `<p><strong>Diferencia clave:</strong> Git es la herramienta que corre en tu computadora; GitHub es el lugar donde subes una copia para respaldarla, compartirla, o colaborar con otros. Puedes usar Git sin GitHub, pero no al revés.</p>`
+              ]
+            },
+            {
+              id: "git-flujo-basico",
+              title: "02-el-flujo-basico.md",
+              status: "listo",
+              body: [
+                `<p>Este es el ciclo que vas a repetir todo el tiempo — literalmente el que usaste para publicar tu foro:</p>`,
+                `<pre class="code-block"><code>git init                          # convierte una carpeta en repositorio (solo una vez)
+git add .                          # marca los cambios para guardarlos
+git commit -m "mensaje claro"       # guarda ese punto en el historial
+git push                           # sube los cambios a GitHub</code></pre>`,
+                `<p><strong>Analogía simple:</strong> <code>add</code> es poner cosas en una caja, <code>commit</code> es cerrar la caja con una etiqueta describiendo qué hay adentro, y <code>push</code> es enviarla a la bodega (GitHub). Puedes hacer varios <code>add</code>/<code>commit</code> antes de un solo <code>push</code>.</p>`
+              ]
+            },
+            {
+              id: "git-status-log-diff",
+              title: "03-revisar-el-estado-de-tu-proyecto.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>git status    # qué archivos cambiaron, cuáles están listos para commit
+git log       # historial de commits anteriores
+git diff      # qué líneas exactas cambiaron, línea por línea</code></pre>`,
+                `<p><code>git status</code> es el comando que más vas a usar — revisa el estado antes de cada <code>add</code>/<code>commit</code> para saber exactamente qué estás a punto de guardar. Se sale de <code>git log</code> presionando la tecla <code>q</code>.</p>`
+              ]
+            },
+            {
+              id: "git-gitignore",
+              title: "04-gitignore.md",
+              status: "listo",
+              body: [
+                `<p>Un archivo <code>.gitignore</code> le dice a Git qué <strong>nunca</strong> debe subir — claves secretas, carpetas pesadas generadas automáticamente, archivos del sistema operativo.</p>`,
+                `<pre class="code-block"><code># archivo .gitignore
+node_modules/
+.env
+*.log
+.DS_Store</code></pre>`,
+                `<p><code>node_modules/</code> se regenera con <code>npm install</code>, así que subirla solo desperdicia espacio. <code>.env</code> nunca se sube porque contiene claves secretas (como aprendiste en la carpeta de despliegue). Crea este archivo <strong>antes</strong> de tu primer <code>git add .</code> — si ya subiste algo por error, Git sigue rastreándolo aunque lo agregues después.</p>`
+              ]
+            },
+            {
+              id: "git-deshacer-errores",
+              title: "05-deshacer-errores.md",
+              status: "listo",
+              body: [
+                `<p>Todo el mundo comete errores con Git — esto es lo que te salva:</p>`,
+                `<pre class="code-block"><code>git checkout -- archivo.js       # descarta cambios sin guardar en ese archivo
+git reset HEAD archivo.js         # saca un archivo del "add", sin borrar el cambio
+git commit --amend -m "nuevo mensaje" # corrige el mensaje del último commit
+git revert &lt;hash-del-commit&gt;       # deshace un commit ya subido, creando uno nuevo</code></pre>`,
+                `<p>Recuerda también el truco de tu propia experiencia: si la terminal se queda en modo <code>&gt;&gt;</code> esperando algo, <code>Ctrl + C</code> cancela y te devuelve al prompt normal.</p>`
+              ]
+            },
+            {
+              id: "git-ramas",
+              title: "06-ramas-branches.md",
+              status: "listo",
+              body: [
+                `<p>Una <strong>rama</strong> (branch) es una línea de trabajo separada — te permite probar algo nuevo sin arriesgar el código que ya funciona en <code>main</code>.</p>`,
+                `<pre class="code-block"><code>git branch nueva-funcion           # crea una rama nueva
+git checkout nueva-funcion          # cambia a esa rama
+git checkout -b otra-funcion        # crea Y cambia en un solo paso
+
+# ... trabajas y haces commits en esa rama ...
+
+git checkout main
+git merge nueva-funcion             # trae los cambios de vuelta a main</code></pre>`,
+                `<p>Flujo típico real: creas una rama por cada funcionalidad nueva, trabajas ahí sin miedo a romper nada, y cuando funciona la unes (<code>merge</code>) de vuelta a <code>main</code>.</p>`
+              ]
+            },
+            {
+              id: "git-conflictos",
+              title: "07-resolver-conflictos.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>conflicto</strong> ocurre cuando Git no puede combinar automáticamente dos cambios en la misma línea de un archivo (típicamente al hacer <code>merge</code> o <code>pull</code>). Git marca el archivo así:</p>`,
+                `<pre class="code-block"><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+tu versión del código
+=======
+la otra versión del código
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; nombre-de-la-rama</code></pre>`,
+                `<p>Tienes que editar el archivo a mano: decide qué código quieres conservar (uno, el otro, o una mezcla), borra las líneas <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>/<code>=======</code>/<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>, y luego <code>git add</code> + <code>git commit</code> normal para cerrar el conflicto.</p>`
+              ]
+            },
+            {
+              id: "git-colaborar-github",
+              title: "08-colaborar-en-github.md",
+              status: "listo",
+              body: [
+                `<p>Cuando trabajas con otras personas (o quieres proponer un cambio a un proyecto que no es tuyo), el flujo estándar en GitHub es:</p>`,
+                `<ul>
+                   <li><strong>Fork</strong>: copias el repositorio de otra persona a tu propia cuenta.</li>
+                   <li><strong>Clone</strong>: <code>git clone https://github.com/usuario/repo.git</code> — descarga una copia local del repositorio a tu computadora.</li>
+                   <li><strong>Pull request</strong>: propones que tus cambios se agreguen al proyecto original — el dueño los revisa antes de aceptarlos.</li>
+                   <li><strong>Issues</strong>: la sección para reportar errores o proponer ideas, sin necesitar escribir código todavía.</li>
+                 </ul>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "terminal",
+          title: "terminal/",
+          lessons: [
+            {
+              id: "terminal-comandos-basicos",
+              title: "01-comandos-basicos.md",
+              status: "listo",
+              body: [
+                `<p>La terminal (o "línea de comandos") es más rápida que navegar con clics una vez que memorizas estos comandos base — funcionan igual en PowerShell (Windows), Mac y Linux, con pequeñas diferencias marcadas:</p>`,
+                `<pre class="code-block"><code>cd nombre-carpeta      # entrar a una carpeta
+cd ..                  # subir un nivel
+ls                     # listar archivos (Windows PowerShell: también funciona)
+mkdir nueva-carpeta     # crear una carpeta
+pwd                     # ver en qué carpeta estás parado ahora mismo
+cls                     # limpiar la pantalla (Mac/Linux: clear)</code></pre>`,
+                `<p><code>cd</code> es el que más vas a usar — es cómo te mueves entre carpetas sin abrir el explorador de archivos.</p>`
+              ]
+            },
+            {
+              id: "terminal-npm",
+              title: "02-npm-y-gestores-de-paquetes.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>gestor de paquetes</strong> descarga e instala librerías de código escrito por otros, para no reinventar todo desde cero. Ya usaste <code>npm</code> (Node) y <code>pip</code> (Python) varias veces en este curso.</p>`,
+                `<pre class="code-block"><code>npm init -y              # crea un package.json nuevo
+npm install express       # instala una librería
+npm install -g nodemon    # instala de forma global (disponible en cualquier proyecto)
+npm run build             # ejecuta un script definido en package.json
+
+pip install pandas --break-system-packages   # equivalente en Python</code></pre>`,
+                `<p>El archivo <code>package.json</code> lista todas las dependencias de tu proyecto — por eso <code>node_modules/</code> va en <code>.gitignore</code>: cualquiera puede regenerarla con <code>npm install</code> a partir de ese archivo.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "buenas-practicas",
+          title: "buenas-practicas/",
+          lessons: [
+            {
+              id: "nombres-claros",
+              title: "01-nombrar-variables-y-archivos.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>// ❌ Confuso
+let x = 20;
+let d = new Date();
+function f(a, b) { return a + b; }
+
+// ✅ Claro
+let edadUsuario = 20;
+let fechaActual = new Date();
+function calcularTotal(precio, impuesto) { return precio + impuesto; }</code></pre>`,
+                `<p>El código se escribe una vez pero se <em>lee</em> muchas veces — incluso tú mismo, un mes después. Un nombre claro ahorra minutos de confusión cada vez que alguien (incluido tú) vuelve a ese archivo.</p>`
+              ]
+            },
+            {
+              id: "readme-comentarios",
+              title: "02-readme-y-comentarios.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>README.md</strong> en la raíz de tu proyecto es lo primero que ve cualquiera que abra tu repositorio en GitHub — explica qué es el proyecto y cómo correrlo.</p>`,
+                `<pre class="code-block"><code># Mi Proyecto
+
+Una breve descripción de qué hace.
+
+## Cómo correrlo
+\\\`\\\`\\\`
+npm install
+npm start
+\\\`\\\`\\\`</code></pre>`,
+                `<p><strong>Comentarios en el código:</strong> úsalos para explicar el <em>por qué</em> de una decisión no obvia, no para repetir lo que el código ya dice claramente (<code>// suma 1</code> arriba de <code>contador++</code> no aporta nada).</p>`
+              ]
+            },
+            {
+              id: "debug-habitos",
+              title: "03-habitos-para-depurar-errores.md",
+              status: "listo",
+              body: [
+                `<p>Cuando algo no funciona, en este orden:</p>`,
+                `<ul>
+                   <li><strong>Lee el mensaje de error completo</strong> — casi siempre dice exactamente el archivo y la línea del problema (lo viviste varias veces con los errores de Git en este curso).</li>
+                   <li>Usa <code>console.log()</code> (JS) o <code>print()</code> (Python) para revisar qué valor tiene realmente una variable en ese punto — no asumas, verifica.</li>
+                   <li>Aísla el problema: comenta partes del código hasta encontrar la línea exacta que causa el error.</li>
+                   <li>Busca el mensaje de error exacto (entre comillas) en internet — es casi seguro que alguien más ya lo tuvo.</li>
+                 </ul>`
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "linux",
+      icon: "📁",
+      title: "08 · Linux",
+      description: "Terminal, administración de sistemas y bash scripting.",
+      lessons: [
+        {
+          id: "linux-panorama",
+          title: "00-por-que-linux.md",
+          status: "listo",
+          body: [
+            `<p>Linux corre la gran mayoría de los servidores del mundo (incluyendo probablemente donde termine publicado este mismo foro). Saber moverte en Linux por terminal es una habilidad que se espera de cualquier desarrollador backend, no solo de administradores de sistemas.</p>`,
+            `<p>Para practicar sin instalar nada: <strong>WSL</strong> (Windows Subsystem for Linux) te da una terminal Linux real dentro de Windows — se instala con un solo comando (<code>wsl --install</code> en PowerShell como administrador).</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "linux-terminal",
+          title: "terminal/",
+          lessons: [
+            {
+              id: "linux-navegacion",
+              title: "01-navegacion-y-archivos.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>pwd                    # carpeta actual
+ls -la                 # listar archivos, incluyendo ocultos, con detalles
+cd carpeta/             # entrar a una carpeta
+mkdir proyecto           # crear carpeta
+touch archivo.txt        # crear archivo vacío
+cp origen.txt destino.txt # copiar
+mv archivo.txt nueva-ruta/ # mover o renombrar
+rm archivo.txt            # borrar archivo
+rm -r carpeta/             # borrar carpeta y su contenido</code></pre>`,
+                `<p><code>rm -r</code> borra sin pasar por la papelera — no hay "deshacer". Antes de correrlo, confirma con <code>ls</code> que estás exactamente en la carpeta que crees.</p>`
+              ]
+            },
+            {
+              id: "linux-permisos",
+              title: "02-permisos-de-archivos.md",
+              status: "listo",
+              body: [
+                `<p>Cada archivo en Linux tiene permisos de lectura (r), escritura (w) y ejecución (x), para tres grupos: el dueño, el grupo, y todos los demás.</p>`,
+                `<pre class="code-block"><code>ls -l archivo.sh
+# -rwxr-xr--  1 joseph  staff  240 archivo.sh
+#  ^^^ ^^^ ^^^
+#  dueño grupo otros
+
+chmod +x archivo.sh        # dar permiso de ejecución
+chmod 755 archivo.sh        # rwx para el dueño, r-x para grupo y otros
+sudo chown joseph archivo.sh # cambiar el dueño del archivo</code></pre>`,
+                `<p>El error <code>Permission denied</code> al intentar correr un script casi siempre se arregla con <code>chmod +x</code>. <code>sudo</code> ejecuta un comando con permisos de administrador — úsalo solo cuando sepas exactamente qué hace ese comando.</p>`
+              ]
+            },
+            {
+              id: "linux-procesos",
+              title: "03-procesos-y-servicios.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>ps aux               # ver todos los procesos corriendo
+top                   # monitor en vivo de CPU/memoria (q para salir)
+kill 1234             # terminar el proceso con ese ID
+sudo systemctl status nginx   # ver el estado de un servicio
+sudo systemctl restart nginx  # reiniciar un servicio
+sudo systemctl enable nginx   # que arranque solo al iniciar el sistema</code></pre>`,
+                `<p><code>systemctl</code> es cómo administras servicios que corren en segundo plano (un servidor web, una base de datos) en la mayoría de distribuciones Linux modernas.</p>`
+              ]
+            },
+            {
+              id: "linux-paquetes",
+              title: "04-gestion-de-paquetes.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code># Debian/Ubuntu
+sudo apt update              # actualizar la lista de paquetes disponibles
+sudo apt install nginx        # instalar un programa
+sudo apt remove nginx         # desinstalar
+
+# Red Hat/CentOS/Fedora
+sudo dnf install nginx</code></pre>`,
+                `<p><code>apt</code> es al sistema operativo lo que <code>npm</code> es a un proyecto de Node — instala software, resolviendo automáticamente qué otras librerías necesita ese programa para funcionar.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "linux-bash",
+          title: "bash-scripting/",
+          lessons: [
+            {
+              id: "bash-primer-script",
+              title: "01-tu-primer-script.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>#!/bin/bash
+# archivo: saludo.sh
+
+nombre="Joseph"
+echo "Hola, $nombre"
+
+if [ -f "datos.txt" ]; then
+  echo "El archivo existe"
+else
+  echo "No se encontró el archivo"
+fi</code></pre>`,
+                `<p><code>#!/bin/bash</code> (llamado "shebang") en la primera línea le dice al sistema qué intérprete usar. Ejecuta con <code>chmod +x saludo.sh</code> y luego <code>./saludo.sh</code>.</p>`
+              ]
+            },
+            {
+              id: "bash-bucles-variables",
+              title: "02-bucles-y-automatizacion.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>for archivo in *.txt; do
+  echo "Procesando: $archivo"
+done
+
+contador=0
+while [ $contador -lt 5 ]; do
+  echo "Vuelta $contador"
+  contador=$((contador + 1))
+done</code></pre>`,
+                `<p>Los scripts de bash son ideales para automatizar tareas repetitivas: respaldos automáticos, limpiar archivos temporales, desplegar código — cualquier secuencia de comandos que harías a mano muchas veces.</p>`
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "windows-server",
+      icon: "📁",
+      title: "09 · Windows Server",
+      description: "Administración de servidores Windows: Active Directory, roles y redes.",
+      lessons: [
+        {
+          id: "ws-panorama",
+          title: "00-que-es-windows-server.md",
+          status: "listo",
+          body: [
+            `<p>Windows Server es la versión de Windows diseñada para correr servicios de red, no para uso personal — sin la mayoría de elementos visuales de escritorio, optimizada para estar siempre encendida administrando usuarios, archivos y otros servidores.</p>`,
+            `<p>Es el estándar en empresas medianas y grandes que usan el ecosistema de Microsoft (Office 365, Exchange, aplicaciones internas de .NET) — un complemento directo a lo que ya viste en la carpeta de <strong>C#/.NET</strong>.</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "ws-fundamentos",
+          title: "fundamentos/",
+          lessons: [
+            {
+              id: "ws-roles",
+              title: "01-instalacion-y-roles.md",
+              status: "listo",
+              body: [
+                `<p>Windows Server se configura instalando <strong>roles</strong> — cada uno convierte al servidor en un tipo de servicio específico:</p>`,
+                `<ul>
+                   <li><strong>Active Directory Domain Services (AD DS)</strong>: gestiona usuarios y permisos de toda una red de computadoras.</li>
+                   <li><strong>DNS Server</strong>: traduce nombres (<code>servidor.empresa.local</code>) a direcciones IP.</li>
+                   <li><strong>DHCP Server</strong>: asigna direcciones IP automáticamente a cada dispositivo que se conecta.</li>
+                   <li><strong>File Server</strong>: comparte carpetas y archivos entre computadoras de la red.</li>
+                 </ul>`,
+                `<p>Se instalan desde <strong>Server Manager</strong> → "Add Roles and Features" — una interfaz gráfica que guía el proceso paso a paso, o por PowerShell con <code>Install-WindowsFeature</code>.</p>`
+              ]
+            },
+            {
+              id: "ws-powershell",
+              title: "02-powershell-basico.md",
+              status: "listo",
+              body: [
+                `<p><strong>PowerShell</strong> es la terminal de administración de Windows — mucho más potente que la línea de comandos clásica (<code>cmd</code>), y la forma real en que se administran servidores Windows a gran escala.</p>`,
+                `<pre class="code-block"><code>Get-Process                       # listar procesos corriendo
+Get-Service                       # listar servicios
+Restart-Service -Name "Spooler"    # reiniciar un servicio
+Get-ADUser -Filter *                # listar usuarios de Active Directory
+New-ADUser -Name "Joseph" -Enabled $true</code></pre>`,
+                `<p>Los comandos de PowerShell siguen el patrón <code>Verbo-Sustantivo</code> (<code>Get-</code>, <code>New-</code>, <code>Restart-</code>, <code>Remove-</code>) — una vez que reconoces el patrón, adivinar comandos nuevos se vuelve mucho más fácil.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "ws-active-directory",
+          title: "active-directory/",
+          lessons: [
+            {
+              id: "ad-que-es",
+              title: "01-que-es-active-directory.md",
+              status: "listo",
+              body: [
+                `<p><strong>Active Directory (AD)</strong> es una base de datos central que guarda todos los usuarios, grupos y computadoras de una organización, con sus permisos — en vez de crear una cuenta separada en cada computadora de la empresa, se administra todo desde un solo lugar.</p>`,
+                `<p><strong>Estructura básica:</strong> un <strong>Domain</strong> (dominio) contiene <strong>OUs</strong> (Organizational Units — como carpetas para organizar usuarios y equipos por departamento), que contienen <strong>usuarios</strong> y <strong>grupos</strong>.</p>`
+              ]
+            },
+            {
+              id: "ad-usuarios-grupos",
+              title: "02-usuarios-y-grupos.md",
+              status: "listo",
+              body: [
+                `<p>En vez de dar permisos a cada usuario uno por uno, se agrupan usuarios con necesidades similares y se le dan permisos al <strong>grupo</strong> completo.</p>`,
+                `<pre class="code-block"><code># PowerShell
+New-ADUser -Name "Maria Lopez" -SamAccountName "mlopez" -Enabled $true
+New-ADGroup -Name "Contabilidad" -GroupScope Global
+Add-ADGroupMember -Identity "Contabilidad" -Members "mlopez"</code></pre>`,
+                `<p>Cuando alguien nuevo entra al departamento de Contabilidad, solo lo agregas a ese grupo y hereda automáticamente todos los permisos ya configurados — sin repetir la configuración usuario por usuario.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "ws-redes",
+          title: "redes-windows/",
+          lessons: [
+            {
+              id: "ws-dns-dhcp",
+              title: "01-dns-y-dhcp.md",
+              status: "listo",
+              body: [
+                `<p><strong>DHCP</strong> le asigna automáticamente una dirección IP a cada dispositivo que se conecta a la red — sin él, tendrías que configurar cada computadora manualmente.</p>`,
+                `<p><strong>DNS</strong> traduce nombres legibles (<code>impresora.empresa.local</code>) a direcciones IP reales — la misma idea que el DNS público de internet (cuando escribes <code>google.com</code>), pero para la red interna de la empresa.</p>`,
+                `<p>Ambos roles casi siempre corren juntos en el mismo servidor que tiene Active Directory, porque AD depende de DNS para funcionar correctamente.</p>`
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "ciberseguridad",
+      icon: "📁",
+      title: "10 · Ciberseguridad",
+      description: "Fundamentos de seguridad, criptografía y cómo proteger lo que construyes.",
+      lessons: [
+        {
+          id: "ciber-panorama",
+          title: "00-los-3-pilares.md",
+          status: "listo",
+          body: [
+            `<p>Toda la ciberseguridad se resume en proteger tres cosas — se conoce como la <strong>tríada CIA</strong> (no la agencia, las siglas en inglés):</p>`,
+            `<ul>
+               <li><strong>Confidencialidad</strong>: que solo quien debe ver un dato pueda verlo (cifrado, permisos).</li>
+               <li><strong>Integridad</strong>: que un dato no sea modificado sin autorización (hashes, firmas digitales).</li>
+               <li><strong>Disponibilidad</strong>: que el sistema siga funcionando cuando se necesita (respaldos, protección contra caídas).</li>
+             </ul>`,
+            `<p>Cada tema de esta carpeta protege una o varias de estas tres cosas — es el marco mental para entender <em>por qué</em> existe cada práctica de seguridad, no solo memorizarlas sueltas.</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "criptografia",
+          title: "criptografia/",
+          lessons: [
+            {
+              id: "cripto-hashing",
+              title: "01-hashing.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>hash</strong> convierte cualquier dato en una cadena de longitud fija, de forma que es prácticamente imposible reconstruir el dato original a partir del hash, y cualquier cambio mínimo en el dato produce un hash completamente distinto.</p>`,
+                `<pre class="code-block"><code># Ya lo usaste en la carpeta de PHP:
+password_hash("micontraseña", PASSWORD_DEFAULT)
+# genera algo como: $2y$10$N9qo8uLOickgx2ZMRZoMy...</code></pre>`,
+                `<p>Por eso las contraseñas se guardan como hash, nunca en texto plano: si alguien roba la base de datos, no puede "deshacer" el hash para obtener la contraseña real — solo puede comparar hashes al verificar un login (<code>password_verify</code>).</p>`
+              ]
+            },
+            {
+              id: "cripto-simetrica-asimetrica",
+              title: "02-cifrado-simetrico-y-asimetrico.md",
+              status: "listo",
+              body: [
+                `<p><strong>Cifrado simétrico</strong>: una sola clave sirve tanto para cifrar como para descifrar. Rápido, pero hay que compartir esa clave de forma segura con quien va a leer el mensaje.</p>`,
+                `<p><strong>Cifrado asimétrico</strong>: hay dos claves relacionadas matemáticamente — una <strong>pública</strong> (la compartes con cualquiera) y una <strong>privada</strong> (nunca la compartes). Lo que se cifra con la pública, solo se descifra con la privada correspondiente.</p>`,
+                `<p>Este es exactamente el sistema detrás de HTTPS: tu navegador usa la clave pública del sitio para establecer una conexión segura, sin que nadie más en la red pueda leer lo que envías.</p>`
+              ]
+            },
+            {
+              id: "cripto-https-tls",
+              title: "03-https-y-certificados.md",
+              status: "listo",
+              body: [
+                `<p><strong>HTTPS</strong> es HTTP normal, pero con todo el tráfico cifrado usando <strong>TLS</strong>. El candado en el navegador significa que nadie en la red (ni siquiera el WiFi público en el que estés) puede leer lo que envías o recibes.</p>`,
+                `<p>Un <strong>certificado SSL/TLS</strong> es un archivo que prueba que un dominio realmente le pertenece a quien dice ser — lo emite una autoridad certificadora de confianza. Servicios como <strong>Let's Encrypt</strong> los dan gratis, y plataformas como GitHub Pages, Vercel o Netlify (las que ya usaste) lo configuran automáticamente sin que tengas que hacer nada.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "seguridad-web",
+          title: "seguridad-web/",
+          lessons: [
+            {
+              id: "owasp-top-vulnerabilidades",
+              title: "01-vulnerabilidades-mas-comunes.md",
+              status: "listo",
+              body: [
+                `<p>El <strong>OWASP Top 10</strong> es la lista de referencia mundial de los errores de seguridad más comunes en aplicaciones web. Ya evitaste varios de estos en carpetas anteriores del curso, sin llamarlos por su nombre:</p>`,
+                `<ul>
+                   <li><strong>Inyección SQL</strong>: cuando el input del usuario se mezcla directamente en una consulta a la base de datos. Se evita con parámetros preparados (viste esto en <strong>php/06</strong>).</li>
+                   <li><strong>XSS (Cross-Site Scripting)</strong>: cuando texto del usuario se muestra sin limpiar y puede incluir código malicioso. Se evita con <code>htmlspecialchars()</code> o el escape automático de React.</li>
+                   <li><strong>Autenticación rota</strong>: contraseñas sin hash, sesiones que nunca expiran, sin límite de intentos de login.</li>
+                   <li><strong>Exposición de datos sensibles</strong>: claves de API en el código en vez de variables de entorno (viste esto en <strong>despliegue/01</strong>).</li>
+                 </ul>`,
+                `<p>El patrón se repite: casi todas las vulnerabilidades web vienen de <strong>confiar en datos que vienen del usuario</strong> sin validarlos ni limpiarlos primero.</p>`
+              ]
+            },
+            {
+              id: "seguridad-defensa-practica",
+              title: "02-defensa-practica.md",
+              status: "listo",
+              body: [
+                `<ul>
+                   <li>Valida y limpia <strong>todo</strong> lo que entra de un formulario, tanto en el frontend como (obligatorio) en el backend.</li>
+                   <li>Usa siempre HTTPS, nunca HTTP, para cualquier sitio con login.</li>
+                   <li>Limita los intentos de login fallidos (evita ataques de "fuerza bruta" probando contraseñas al azar).</li>
+                   <li>Mantén actualizadas las librerías de tu proyecto — muchas vulnerabilidades reales vienen de dependencias viejas con fallos ya conocidos y públicos.</li>
+                   <li>Nunca confíes en validación hecha solo en JavaScript del navegador — cualquiera puede desactivarla o saltársela directamente contra tu API.</li>
+                 </ul>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "redes-firewalls",
+          title: "redes-y-firewalls/",
+          lessons: [
+            {
+              id: "firewall-conceptos",
+              title: "01-firewalls-y-puertos.md",
+              status: "listo",
+              body: [
+                `<p>Un <strong>puerto</strong> es un número que identifica qué servicio específico de una computadora está recibiendo una conexión (el 80/443 para web, el 22 para SSH, el 3306 para MySQL). Un <strong>firewall</strong> decide qué tráfico entra o sale, filtrando por esos puertos y direcciones IP.</p>`,
+                `<p>Regla base de cualquier servidor en producción: cierra todos los puertos que no necesites activamente. Cada puerto abierto es una puerta más que alguien podría intentar forzar — solo deja abierto lo estrictamente necesario para que tu app funcione.</p>`
+              ]
+            },
+            {
+              id: "vpn-conceptos",
+              title: "02-vpn-basico.md",
+              status: "listo",
+              body: [
+                `<p>Una <strong>VPN</strong> crea un túnel cifrado entre tu dispositivo y un servidor, de forma que todo tu tráfico pasa por ahí protegido, incluso en una red pública no confiable (WiFi de un café, por ejemplo).</p>`,
+                `<p>En empresas, las VPNs también se usan para que empleados remotos accedan a la red interna (incluyendo un servidor con Active Directory) como si estuvieran físicamente en la oficina.</p>`
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: "hacking-etico",
+      icon: "📁",
+      title: "11 · Hacking ético",
+      description: "Metodología de auditoría de seguridad, siempre con autorización legal explícita.",
+      lessons: [
+        {
+          id: "hacking-marco-legal",
+          title: "00-el-marco-legal-primero.md",
+          status: "listo",
+          body: [
+            `<p>Antes que cualquier técnica: probar la seguridad de un sistema <strong>sin permiso explícito por escrito del dueño</strong> es un delito en prácticamente todos los países, sin importar la intención. Esta carpeta enseña la profesión real de <strong>pentesting</strong> (pruebas de penetración autorizadas) — la diferencia legal completa entre eso y "hackear" algo es un solo documento: la <strong>autorización firmada</strong>.</p>`,
+            `<p><strong>Cómo se practica de forma 100% legal:</strong></p>
+             <ul>
+               <li>Plataformas hechas para esto: <strong>TryHackMe</strong> y <strong>HackTheBox</strong> — servidores vulnerables a propósito, para practicar sin riesgo legal.</li>
+               <li><strong>CTFs</strong> (Capture The Flag): competencias de seguridad, muchas gratuitas, con retos organizados por dificultad.</li>
+               <li><strong>Programas de bug bounty</strong> (HackerOne, Bugcrowd): empresas que pagan por reportar vulnerabilidades reales en sus sistemas, dentro de reglas claras que ellas mismas definen.</li>
+             </ul>`,
+            `<p>La certificación de referencia en la industria para esta carrera es <strong>CEH</strong> (Certified Ethical Hacker) o, más orientada a la práctica real, <strong>OSCP</strong>.</p>`
+          ]
+        }
+      ],
+      subfolders: [
+        {
+          id: "hacking-metodologia",
+          title: "metodologia/",
+          lessons: [
+            {
+              id: "metodologia-fases",
+              title: "01-las-fases-de-un-pentest.md",
+              status: "listo",
+              body: [
+                `<p>Una auditoría de seguridad profesional sigue siempre las mismas fases, en orden:</p>`,
+                `<ul>
+                   <li><strong>Reconocimiento</strong>: recopilar información pública del objetivo (dominios, tecnologías usadas, empleados) sin tocar directamente sus sistemas.</li>
+                   <li><strong>Escaneo</strong>: identificar qué puertos y servicios están activos y accesibles (herramientas como Nmap).</li>
+                   <li><strong>Análisis de vulnerabilidades</strong>: comparar lo encontrado contra bases de datos conocidas de fallos de seguridad.</li>
+                   <li><strong>Explotación</strong>: intentar aprovechar una vulnerabilidad real, solo dentro del alcance autorizado.</li>
+                   <li><strong>Reporte</strong>: documentar todo lo encontrado con evidencia clara y recomendaciones — este es, en la práctica, el entregable más importante del trabajo completo.</li>
+                 </ul>`
+              ]
+            },
+            {
+              id: "reconocimiento-osint",
+              title: "02-reconocimiento-y-osint.md",
+              status: "listo",
+              body: [
+                `<p><strong>OSINT</strong> (Open Source Intelligence) es recopilar información que ya es pública, sin interactuar directamente con los sistemas del objetivo — completamente legal incluso sin autorización, porque solo usas datos ya abiertos al público.</p>`,
+                `<ul>
+                   <li><code>whois dominio.com</code> — datos de registro de un dominio.</li>
+                   <li>Buscar subdominios públicos y tecnologías usadas por un sitio.</li>
+                   <li>Revisar perfiles públicos de LinkedIn para entender la estructura de una organización (usado en simulacros de ingeniería social autorizados).</li>
+                 </ul>`,
+                `<p>Esta fase existe porque, en un ataque real, la mayoría de brechas de seguridad empiezan con información que la propia organización expuso sin darse cuenta — no con una técnica sofisticada.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "hacking-herramientas",
+          title: "herramientas/",
+          lessons: [
+            {
+              id: "nmap-basico",
+              title: "01-nmap-escaneo-de-red.md",
+              status: "listo",
+              body: [
+                `<p><strong>Nmap</strong> es la herramienta estándar de la industria para descubrir qué dispositivos y servicios hay activos en una red — usada tanto por profesionales de seguridad como por administradores de sistemas para auditar sus propias redes.</p>`,
+                `<pre class="code-block"><code>nmap 192.168.1.1              # escaneo básico de un dispositivo
+nmap -sV 192.168.1.1            # detecta versión de cada servicio encontrado
+nmap 192.168.1.0/24              # escanea toda una red local</code></pre>`,
+                `<p>Solo apunta Nmap a redes o dispositivos que sean tuyos, o a las máquinas de práctica de TryHackMe/HackTheBox — nunca a redes ajenas sin autorización explícita.</p>`
+              ]
+            },
+            {
+              id: "wireshark-basico",
+              title: "02-wireshark-analisis-de-trafico.md",
+              status: "listo",
+              body: [
+                `<p><strong>Wireshark</strong> captura y muestra el tráfico de red en tiempo real — útil tanto para depurar problemas de conexión reales como para entender exactamente qué datos viajan por una red (y por qué HTTPS es tan importante: sin él, cualquiera con Wireshark en la misma red vería tu contraseña en texto plano si el sitio usa solo HTTP).</p>`,
+                `<p>Es una herramienta de análisis, completamente legal de usar en tu propia red — la ilegalidad empieza si la usas para interceptar tráfico ajeno sin autorización.</p>`
+              ]
+            },
+            {
+              id: "burp-suite-basico",
+              title: "03-burp-suite-y-apps-web.md",
+              status: "listo",
+              body: [
+                `<p><strong>Burp Suite</strong> es la herramienta estándar para auditar la seguridad de aplicaciones web — se coloca entre tu navegador y el sitio, permitiéndote ver y modificar cada petición HTTP antes de que se envíe.</p>`,
+                `<p>Es exactamente la herramienta que un profesional usaría para verificar que las defensas que aprendiste en <strong>ciberseguridad/seguridad-web/</strong> (validación en el backend, protección contra XSS e inyección SQL) realmente funcionan en tu propio proyecto — probarla contra tus propias apps es una excelente forma de cerrar el círculo de este curso.</p>`
+              ]
+            }
+          ]
+        },
+        {
+          id: "hacking-practica-legal",
+          title: "practica-legal/",
+          lessons: [
+            {
+              id: "plataformas-practica",
+              title: "01-donde-practicar-legalmente.md",
+              status: "listo",
+              body: [
+                `<ul>
+                   <li><strong>TryHackMe</strong>: el mejor punto de entrada — retos guiados paso a paso, ideal si vienes sin experiencia previa en seguridad.</li>
+                   <li><strong>HackTheBox</strong>: más orientado a quienes ya tienen bases, retos menos guiados y más realistas.</li>
+                   <li><strong>PortSwigger Web Security Academy</strong>: gratuito, enfocado 100% en vulnerabilidades de aplicaciones web con laboratorios interactivos.</li>
+                   <li><strong>OverTheWire</strong>: retos clásicos de Linux y seguridad básica, muy usados para practicar terminal y permisos.</li>
+                 </ul>`,
+                `<p>Empieza por TryHackMe, sigue la ruta "Pre Security" o "Cyber Security 101" — están diseñadas específicamente para quien viene sin experiencia previa en el tema.</p>`
+              ]
+            }
+          ]
         }
       ]
     }
