@@ -643,6 +643,115 @@ persona.ciudad = "Santo Domingo"; // agregar una propiedad nueva</code></pre>`,
 obtenerDatos().then(datos =&gt; console.log(datos));</code></pre>`,
                 `<p><code>async</code> antes de una función permite usar <code>await</code> dentro de ella, que "pausa" esa función (sin pausar la página) hasta que la respuesta llegue. Es la forma moderna; antes se hacía con <code>.then()</code> encadenados, que verás en código más viejo.</p>`
               ]
+            },
+            {
+              id: "js-json",
+              title: "08-json.md",
+              status: "listo",
+              body: [
+                `<p><strong>JSON</strong> (JavaScript Object Notation) es el formato estándar para enviar y guardar datos estructurados — así es como hablan entre sí un frontend y un backend.</p>`,
+                `<pre class="code-block"><code>const persona = { nombre: "Joseph", edad: 20 };
+
+// Objeto de JS → texto JSON (para enviarlo o guardarlo)
+const texto = JSON.stringify(persona);
+console.log(texto); // '{"nombre":"Joseph","edad":20}'
+
+// Texto JSON → objeto de JS (al recibirlo)
+const objeto = JSON.parse(texto);
+console.log(objeto.nombre); // "Joseph"</code></pre>`,
+                `<p>Cuando usas <code>fetch</code> y llamas a <code>.json()</code>, por dentro está haciendo un <code>JSON.parse()</code> automáticamente. Un archivo <code>.json</code> es literalmente un archivo de texto con esta sintaxis — nada más.</p>`
+              ]
+            },
+            {
+              id: "js-localstorage",
+              title: "09-localstorage.md",
+              status: "listo",
+              body: [
+                `<p><code>localStorage</code> guarda datos en el navegador del usuario, que persisten aunque cierre la pestaña o apague la computadora (a diferencia de una variable normal, que se borra al recargar).</p>`,
+                `<pre class="code-block"><code>// Guardar (solo acepta texto, por eso se usa JSON.stringify)
+localStorage.setItem("usuario", JSON.stringify({ nombre: "Joseph" }));
+
+// Leer
+const datos = JSON.parse(localStorage.getItem("usuario"));
+console.log(datos.nombre);
+
+// Borrar una clave
+localStorage.removeItem("usuario");
+
+// Borrar todo
+localStorage.clear();</code></pre>`,
+                `<p>Úsalo para preferencias del usuario, un carrito de compras, o el progreso de un formulario largo — nunca para datos sensibles (contraseñas, tarjetas), porque cualquiera con acceso al navegador puede leerlo.</p>`
+              ]
+            },
+            {
+              id: "js-clases-oop",
+              title: "10-clases-y-oop.md",
+              status: "listo",
+              body: [
+                `<p>Una <strong>clase</strong> es un molde para crear objetos con la misma estructura y comportamiento — útil cuando vas a crear muchos objetos parecidos (usuarios, productos, enemigos de un juego).</p>`,
+                `<pre class="code-block"><code>class Usuario {
+  constructor(nombre, edad) {
+    this.nombre = nombre;
+    this.edad = edad;
+  }
+
+  saludar() {
+    return "Hola, soy " + this.nombre;
+  }
+
+  esMayorDeEdad() {
+    return this.edad &gt;= 18;
+  }
+}
+
+const joseph = new Usuario("Joseph", 20);
+console.log(joseph.saludar());        // "Hola, soy Joseph"
+console.log(joseph.esMayorDeEdad());  // true</code></pre>`,
+                `<p><code>constructor</code> es la función que se ejecuta al crear (<code>new</code>) un objeto de esa clase — ahí defines sus datos iniciales con <code>this</code>. Los demás métodos son acciones que ese objeto puede hacer.</p>`
+              ]
+            },
+            {
+              id: "js-manejo-errores",
+              title: "11-manejo-de-errores.md",
+              status: "listo",
+              body: [
+                `<p><code>try/catch</code> evita que un error detenga todo tu programa — lo "atrapa" y decides qué hacer.</p>`,
+                `<pre class="code-block"><code>try {
+  const datos = JSON.parse("esto no es json válido");
+} catch (error) {
+  console.log("Algo salió mal:", error.message);
+}
+
+async function obtenerDatos() {
+  try {
+    const respuesta = await fetch("https://api.ejemplo.com/datos");
+    if (!respuesta.ok) throw new Error("La API respondió con error");
+    return await respuesta.json();
+  } catch (error) {
+    console.log("No se pudo obtener los datos:", error.message);
+    return null;
+  }
+}</code></pre>`,
+                `<p>Regla práctica: envuelve en <code>try/catch</code> cualquier código que dependa de algo externo que puede fallar — una petición a internet, leer datos que quizás no tengan el formato esperado, convertir texto a número.</p>`
+              ]
+            },
+            {
+              id: "js-modulos",
+              title: "12-modulos.md",
+              status: "listo",
+              body: [
+                `<p>Los <strong>módulos</strong> permiten dividir tu código en varios archivos y compartir funciones entre ellos, en vez de tener un solo archivo gigante.</p>`,
+                `<pre class="code-block"><code>// archivo: utilidades.js
+export function sumar(a, b) {
+  return a + b;
+}
+export const PI = 3.1416;
+
+// archivo: main.js
+import { sumar, PI } from "./utilidades.js";
+console.log(sumar(2, 3));</code></pre>`,
+                `<p>Para usar módulos en el navegador, el <code>&lt;script&gt;</code> necesita <code>type="module"</code>: <code>&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</code>. En Node.js (backend) la sintaxis es la misma en proyectos modernos, o usa <code>require()</code> en proyectos más antiguos.</p>`
+              ]
             }
           ]
         },
@@ -651,10 +760,203 @@ obtenerDatos().then(datos =&gt; console.log(datos));</code></pre>`,
           title: "php/",
           lessons: [
             {
-              id: "php-intro",
-              title: "01-que-es-php.md",
-              status: "pendiente",
-              body: [`<p>🔧 En construcción — próxima carpeta a desarrollar: PHP básico, conexión a MySQL, y cómo un servidor PHP procesa formularios.</p>`]
+              id: "php-que-es",
+              title: "00-que-es-y-para-que-sirve.md",
+              status: "listo",
+              body: [
+                `<p><strong>PHP</strong> es un lenguaje que corre en el <strong>servidor</strong>, no en el navegador del usuario. La diferencia con JavaScript del lado del cliente: PHP genera el HTML final <em>antes</em> de que le llegue a la persona, así que puede leer bases de datos, procesar formularios, manejar sesiones de usuario y luego enviar una página ya lista.</p>`,
+                `<p><strong>Con PHP puedes construir:</strong></p>
+                 <ul>
+                   <li>Sistemas de <strong>login y registro</strong> con sesiones de usuario.</li>
+                   <li>Sitios que muestran datos desde una <strong>base de datos</strong> (una tienda, un blog, un foro real como este).</li>
+                   <li>APIs que responden JSON, igual que las que consumiste con <code>fetch</code> en JavaScript.</li>
+                   <li>Procesamiento de formularios: recibir lo que el usuario escribió y guardarlo o validarlo.</li>
+                 </ul>`,
+                `<p><strong>Dónde ya lo estás usando sin saberlo:</strong> WordPress (el sistema detrás de gran parte de internet) está hecho en PHP. Facebook empezó en PHP. Es el lenguaje de backend más instalado en servidores de hosting compartido — por eso sigue siendo tan usado para sitios pequeños y medianos.</p>`
+              ]
+            },
+            {
+              id: "php-sintaxis-basica",
+              title: "01-sintaxis-basica.md",
+              status: "listo",
+              body: [
+                `<p>El código PHP vive dentro de etiquetas <code>&lt;?php ?&gt;</code>, mezclado directamente con HTML normal en el mismo archivo <code>.php</code>:</p>`,
+                `<pre class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Bienvenido&lt;/h1&gt;
+
+  &lt;?php
+    $nombre = "Joseph";
+    echo "&lt;p&gt;Hola, " . $nombre . "&lt;/p&gt;";
+  ?&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>`,
+                `<p><strong>Diferencias clave con JavaScript:</strong> las variables siempre empiezan con <code>$</code> (<code>$nombre</code>), se imprime con <code>echo</code> en vez de <code>console.log</code>, y unir texto se hace con un punto <code>.</code> en vez de <code>+</code>. Un archivo <code>.php</code> no se abre haciendo doble clic — necesita un servidor que lo interprete (por eso se usan herramientas como <strong>XAMPP</strong> para practicar en tu computadora).</p>`
+              ]
+            },
+            {
+              id: "php-variables-tipos",
+              title: "02-variables-y-arreglos.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>$edad = 20;                    // número
+$nombre = "Joseph";              // texto
+$activo = true;                  // booleano
+
+// Arreglo indexado
+$frutas = ["manzana", "pera", "uva"];
+echo $frutas[0]; // "manzana"
+
+// Arreglo asociativo (como un objeto de JS)
+$persona = [
+  "nombre" =&gt; "Joseph",
+  "edad" =&gt; 20
+];
+echo $persona["nombre"]; // "Joseph"</code></pre>`,
+                `<p>El arreglo asociativo (<code>=&gt;</code>) es el equivalente directo al objeto <code>{ }</code> de JavaScript — es la estructura que más vas a usar para representar datos como un usuario o un producto.</p>`
+              ]
+            },
+            {
+              id: "php-condicionales-bucles-funciones",
+              title: "03-condicionales-bucles-funciones.md",
+              status: "listo",
+              body: [
+                `<pre class="code-block"><code>if ($edad &gt;= 18) {
+  echo "Mayor de edad";
+} elseif ($edad &gt;= 13) {
+  echo "Adolescente";
+} else {
+  echo "Niño";
+}
+
+foreach ($frutas as $fruta) {
+  echo $fruta . "&lt;br&gt;";
+}
+
+for ($i = 0; $i &lt; 5; $i++) {
+  echo $i;
+}
+
+function sumar($a, $b) {
+  return $a + $b;
+}
+echo sumar(2, 3); // 5</code></pre>`,
+                `<p><code>foreach</code> es el equivalente al <code>for...of</code> de JavaScript — la forma más común de recorrer un arreglo en PHP. El resto de la sintaxis (<code>if</code>, <code>for</code>, funciones) es casi idéntica a lo que ya aprendiste en JS.</p>`
+              ]
+            },
+            {
+              id: "php-formularios",
+              title: "04-formularios-get-y-post.md",
+              status: "listo",
+              body: [
+                `<p>Cuando un <code>&lt;form&gt;</code> de HTML se envía a un archivo PHP, ese archivo recibe los datos automáticamente en <code>$_GET</code> o <code>$_POST</code>, según el <code>method</code> que uses en el formulario.</p>`,
+                `<pre class="code-block"><code>&lt;!-- formulario.html --&gt;
+&lt;form action="procesar.php" method="POST"&gt;
+  &lt;input type="text" name="nombre"&gt;
+  &lt;button type="submit"&gt;Enviar&lt;/button&gt;
+&lt;/form&gt;</code></pre>`,
+                `<pre class="code-block"><code>&lt;?php
+// procesar.php
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  $nombre = $_POST["nombre"];
+  echo "Hola, " . htmlspecialchars($nombre);
+}
+?&gt;</code></pre>`,
+                `<p><strong>GET vs POST:</strong> <code>GET</code> manda los datos visibles en la URL (bueno para búsquedas, filtros); <code>POST</code> los manda ocultos en el cuerpo de la petición (obligatorio para contraseñas y datos sensibles). <code>htmlspecialchars()</code> es importante: limpia el texto del usuario para que no pueda inyectar código HTML malicioso en tu página.</p>`
+              ]
+            },
+            {
+              id: "php-sesiones-cookies",
+              title: "05-sesiones-y-cookies.md",
+              status: "listo",
+              body: [
+                `<p>HTTP no "recuerda" nada entre una petición y otra — las <strong>sesiones</strong> son cómo PHP mantiene a un usuario "conectado" mientras navega tu sitio (por ejemplo, después de hacer login).</p>`,
+                `<pre class="code-block"><code>&lt;?php
+session_start(); // siempre primero, antes de cualquier otra salida
+
+// Guardar datos de sesión (por ejemplo, al hacer login)
+$_SESSION["usuario_id"] = 42;
+$_SESSION["nombre"] = "Joseph";
+
+// Leerlos en cualquier otra página del sitio
+if (isset($_SESSION["usuario_id"])) {
+  echo "Bienvenido de nuevo, " . $_SESSION["nombre"];
+} else {
+  echo "No has iniciado sesión";
+}
+
+// Cerrar sesión
+session_destroy();
+?&gt;</code></pre>`,
+                `<p>Las <strong>cookies</strong> (<code>setcookie()</code>) son parecidas pero se guardan en el navegador del usuario en vez del servidor, y sirven para cosas como "recordarme" durante varios días.</p>`
+              ]
+            },
+            {
+              id: "php-mysql-pdo",
+              title: "06-conexion-a-mysql-con-pdo.md",
+              status: "listo",
+              body: [
+                `<p><strong>PDO</strong> es la forma moderna y segura de que PHP hable con una base de datos MySQL.</p>`,
+                `<pre class="code-block"><code>&lt;?php
+$pdo = new PDO("mysql:host=localhost;dbname=mi_app", "usuario", "contraseña");
+
+// Leer datos (SELECT)
+$stmt = $pdo-&gt;query("SELECT * FROM usuarios");
+foreach ($stmt as $fila) {
+  echo $fila["nombre"] . "&lt;br&gt;";
+}
+
+// Insertar datos de forma SEGURA, con parámetros preparados
+$stmt = $pdo-&gt;prepare("INSERT INTO usuarios (nombre, edad) VALUES (?, ?)");
+$stmt-&gt;execute([$_POST["nombre"], $_POST["edad"]]);
+?&gt;</code></pre>`,
+                `<p><strong>¿Por qué "prepared statements" (con <code>?</code>) y no simplemente pegar el texto del usuario en la consulta?</strong> Porque si no, alguien podría escribir código SQL malicioso en un formulario y manipular o borrar tu base de datos completa — se llama "SQL injection". Los parámetros preparados hacen que eso sea imposible, porque PDO trata el dato como texto plano, nunca como código.</p>`
+              ]
+            },
+            {
+              id: "php-seguridad-basica",
+              title: "07-seguridad-basica.md",
+              status: "listo",
+              body: [
+                `<p>Tres reglas que evitan la mayoría de los problemas de seguridad comunes en sitios hechos con PHP:</p>`,
+                `<pre class="code-block"><code>&lt;?php
+// 1. Nunca guardes contraseñas en texto plano
+$hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+// ... guarda $hash en la base de datos, nunca la contraseña original
+
+// Para verificar el login después:
+if (password_verify($_POST["password"], $hash)) {
+  echo "Contraseña correcta";
+}
+
+// 2. Limpia SIEMPRE lo que vas a mostrar de vuelta al usuario
+echo htmlspecialchars($_POST["comentario"]);
+
+// 3. Usa prepared statements (ver lección anterior) — nunca
+// construyas una consulta SQL pegando texto del usuario directamente
+?&gt;</code></pre>`,
+                `<p>Estas tres cosas — <code>password_hash</code>, <code>htmlspecialchars</code>, y parámetros preparados — son la diferencia entre un sitio seguro y uno que puede ser hackeado en minutos. No son opcionales, son la base.</p>`
+              ]
+            },
+            {
+              id: "php-ejercicio-libro-visitas",
+              title: "ejercicio-libro-de-visitas.md",
+              status: "listo",
+              body: [
+                `<div class="exercise-box"><span class="exercise-label">🧩 EJERCICIO — usa formularios + MySQL</span>
+                 <p>Construye un <strong>libro de visitas</strong> simple:</p>
+                 <ul>
+                   <li>Una tabla en MySQL: <code>visitas (id, nombre, mensaje, fecha)</code></li>
+                   <li>Un formulario HTML con campos "nombre" y "mensaje"</li>
+                   <li>Un archivo PHP que reciba el formulario (<code>$_POST</code>) e inserte la fila con PDO (usando parámetros preparados)</li>
+                   <li>La misma página debe mostrar, debajo del formulario, todos los mensajes anteriores guardados (con <code>SELECT * FROM visitas ORDER BY fecha DESC</code>)</li>
+                 </ul>
+                 <p>Este es el patrón base de casi cualquier sitio con comentarios, reseñas o publicaciones.</p>
+                 </div>`
+              ]
             }
           ]
         }
