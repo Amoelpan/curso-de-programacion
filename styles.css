@@ -229,6 +229,40 @@ html, body {
 .lesson-body ul { padding-left: 20px; }
 .lesson-body li { margin-bottom: 8px; }
 
+.code-block {
+  display: block;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin: 4px 0 20px;
+  overflow-x: auto;
+}
+.code-block code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #cfe3ff;
+  font-size: 13px;
+  line-height: 1.65;
+  white-space: pre;
+}
+.exercise-box {
+  border: 1px solid rgba(126,225,168,0.3);
+  background: rgba(126,225,168,0.06);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin: 4px 0 20px;
+}
+.exercise-box .exercise-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--accent-3);
+  margin-bottom: 8px;
+  display: block;
+}
+
 .pending-banner {
   display: inline-flex;
   align-items: center;

@@ -78,10 +78,147 @@ const FORUM_DATA = {
           ]
         },
         {
+          id: "estructura-etiquetas",
+          title: "estructura-y-etiquetas.md",
+          status: "listo",
+          body: [
+            `<p>Toda página HTML tiene el mismo esqueleto base. Estas son las etiquetas que vas a usar en el 90% de tus páginas:</p>`,
+            `<pre class="code-block"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Mi página&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;&lt;h1&gt;Título del sitio&lt;/h1&gt;&lt;/header&gt;
+
+  &lt;nav&gt;
+    &lt;a href="#inicio"&gt;Inicio&lt;/a&gt;
+    &lt;a href="#contacto"&gt;Contacto&lt;/a&gt;
+  &lt;/nav&gt;
+
+  &lt;main&gt;
+    &lt;section&gt;
+      &lt;h2&gt;Sobre mí&lt;/h2&gt;
+      &lt;p&gt;Un párrafo de texto.&lt;/p&gt;
+      &lt;img src="foto.jpg" alt="descripción de la imagen"&gt;
+      &lt;a href="https://ejemplo.com"&gt;Un enlace&lt;/a&gt;
+      &lt;button&gt;Haz clic&lt;/button&gt;
+    &lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;footer&gt;&lt;p&gt;© 2026&lt;/p&gt;&lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>`,
+            `<p><strong>Lo importante:</strong> usa etiquetas semánticas (<code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>footer</code>) en vez de puros <code>&lt;div&gt;</code> — le dan significado a tu página, ayudan al SEO y a la accesibilidad. Y nunca olvides el atributo <code>alt</code> en las imágenes.</p>`
+          ]
+        },
+        {
+          id: "css-cajas-layout",
+          title: "css-cajas-y-layout.md",
+          status: "listo",
+          body: [
+            `<p>Todo en CSS es una caja. El <strong>box model</strong> es: contenido → <code>padding</code> (espacio interno) → <code>border</code> → <code>margin</code> (espacio externo).</p>`,
+            `<pre class="code-block"><code>.tarjeta {
+  padding: 16px;
+  margin: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f4f4f4;
+  color: #222;
+}</code></pre>`,
+            `<p><strong>Flexbox</strong> — para alinear elementos en una fila o columna (la herramienta que más vas a usar):</p>`,
+            `<pre class="code-block"><code>.contenedor {
+  display: flex;
+  justify-content: space-between; /* horizontal */
+  align-items: center;            /* vertical */
+  gap: 16px;                      /* espacio entre elementos */
+}</code></pre>`,
+            `<p><strong>Grid</strong> — para layouts en cuadrícula (galerías, dashboards):</p>`,
+            `<pre class="code-block"><code>.galeria {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+  gap: 12px;
+}</code></pre>`,
+            `<p>Regla práctica: si estás alineando cosas en una sola dirección, usa <strong>flex</strong>. Si necesitas filas y columnas a la vez, usa <strong>grid</strong>.</p>`
+          ]
+        },
+        {
+          id: "javascript-basico-web",
+          title: "javascript-basico-web.md",
+          status: "listo",
+          body: [
+            `<p>JavaScript es lo que hace que una página <strong>reaccione</strong> — sin él, HTML/CSS son solo un documento estático.</p>`,
+            `<p><strong>Variables y funciones:</strong></p>`,
+            `<pre class="code-block"><code>let nombre = "Joseph";       // puede cambiar
+const PI = 3.1416;           // no puede cambiar
+
+function saludar(persona) {
+  return "Hola, " + persona;
+}
+
+console.log(saludar(nombre)); // "Hola, Joseph"</code></pre>`,
+            `<p><strong>Seleccionar y modificar el HTML (el DOM):</strong></p>`,
+            `<pre class="code-block"><code>const boton = document.querySelector("button");
+const titulo = document.querySelector("h1");
+
+boton.addEventListener("click", () =&gt; {
+  titulo.textContent = "¡Le diste clic!";
+  titulo.style.color = "blue";
+});</code></pre>`,
+            `<p>Con esas dos piezas — <code>querySelector</code> para encontrar elementos y <code>addEventListener</code> para reaccionar a acciones del usuario (clic, escribir, enviar un formulario) — ya puedes hacer que cualquier página interactúe.</p>`
+          ]
+        },
+        {
+          id: "ejercicio-tarjeta-perfil",
+          title: "ejercicio-tarjeta-perfil.md",
+          status: "listo",
+          body: [
+            `<div class="exercise-box"><span class="exercise-label">🧩 EJERCICIO 1 — nivel: recién empezando</span>
+             <p>Crea una <strong>tarjeta de perfil</strong> con:</p>
+             <ul>
+               <li>Una imagen (puede ser cualquier foto o <code>https://via.placeholder.com/150</code>)</li>
+               <li>Un nombre en <code>&lt;h2&gt;</code></li>
+               <li>Una descripción corta en <code>&lt;p&gt;</code></li>
+               <li>Un botón que diga "Contactar"</li>
+             </ul>
+             <p>Usa <strong>flexbox</strong> para centrar todo dentro de una caja con borde redondeado, sombra y algo de padding.</p>
+             </div>`,
+            `<p>Cuando termines esa versión, agrégale con JavaScript: que al hacer clic en "Contactar" el botón cambie de texto a "¡Mensaje enviado!".</p>`
+          ]
+        },
+        {
+          id: "ejercicio-lista-tareas",
+          title: "ejercicio-lista-de-tareas.md",
+          status: "listo",
+          body: [
+            `<div class="exercise-box"><span class="exercise-label">🧩 EJERCICIO 2 — nivel: ya sabes DOM básico</span>
+             <p>Crea una <strong>lista de tareas</strong> (to-do list) con:</p>
+             <ul>
+               <li>Un <code>&lt;input&gt;</code> de texto y un botón "Agregar"</li>
+               <li>Una <code>&lt;ul&gt;</code> vacía donde van apareciendo las tareas</li>
+               <li>Al hacer clic en "Agregar", el texto del input se convierte en un nuevo <code>&lt;li&gt;</code> dentro de la lista</li>
+               <li>Al hacer clic sobre una tarea de la lista, esa tarea se tacha (<code>text-decoration: line-through</code>)</li>
+             </ul>
+             </div>`,
+            `<p>Pista clave: <code>document.createElement("li")</code> crea el elemento, <code>.textContent</code> le pone el texto, y <code>lista.appendChild(nuevoLi)</code> lo agrega a la página.</p>`
+          ]
+        },
+        {
           id: "hosting-dominios",
           title: "publicar-tu-sitio.md",
-          status: "pendiente",
-          body: [`<p>🔧 En construcción — cubrirá: GitHub Pages, Netlify, Vercel y dominios propios.</p>`]
+          status: "listo",
+          body: [
+            `<p>Ya lo hiciste con este mismo proyecto — pero aquí está el resumen para repetirlo con cualquier página nueva, usando <strong>GitHub Pages</strong> (gratis):</p>`,
+            `<pre class="code-block"><code>git init
+git add .
+git commit -m "primera version"
+git branch -M main
+git remote add origin https://github.com/tu-usuario/tu-repo.git
+git push -u origin main</code></pre>`,
+            `<p>Luego en GitHub: entra al <strong>repositorio</strong> (no a la configuración de tu cuenta) → <strong>Settings</strong> → <strong>Pages</strong> → en "Source" elige la rama <code>main</code> y la carpeta <code>/ (root)</code> → <strong>Save</strong>.</p>`,
+            `<p>En 1-2 minutos tu sitio queda en <code>https://tu-usuario.github.io/tu-repo/</code>. Alternativa sin usar Git: arrastrar la carpeta a <strong>netlify.com</strong>.</p>`
+          ]
         }
       ]
     },
