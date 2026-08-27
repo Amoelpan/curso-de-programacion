@@ -1,143 +1,364 @@
-/* =========================
-   MENÚ MÓVIL
-========================= */
+const areas = {
 
-const mobileMenuButton =
-    document.getElementById("mobileMenuButton");
+    "programacion": {
+        nombre: "Programación",
+        icono: "💻",
+        descripcion: "Aprende los fundamentos de la programación y cómo construir software."
+    },
 
-const mobileMenu =
-    document.getElementById("mobileMenu");
+    "desarrollo-web": {
+        nombre: "Desarrollo Web",
+        icono: "🌐",
+        descripcion: "Aprende a crear páginas y aplicaciones web modernas."
+    },
+
+    "aplicaciones-moviles": {
+        nombre: "Aplicaciones Móviles",
+        icono: "📱",
+        descripcion: "Aprende a desarrollar aplicaciones para dispositivos móviles."
+    },
+
+    "aplicaciones-escritorio": {
+        nombre: "Aplicaciones de Escritorio",
+        icono: "🖥️",
+        descripcion: "Construye aplicaciones para Windows, Linux y otros sistemas."
+    },
+
+    "videojuegos": {
+        nombre: "Videojuegos",
+        icono: "🎮",
+        descripcion: "Aprende a crear videojuegos y sistemas interactivos."
+    },
+
+    "inteligencia-artificial": {
+        nombre: "Inteligencia Artificial",
+        icono: "🤖",
+        descripcion: "Aprende sobre IA, modelos de lenguaje, agentes y machine learning."
+    },
+
+    "herramientas": {
+        nombre: "Herramientas",
+        icono: "🛠️",
+        descripcion: "Aprende a utilizar las herramientas esenciales para programadores."
+    },
+
+    "bases-de-datos": {
+        nombre: "Bases de Datos",
+        icono: "🗄️",
+        descripcion: "Aprende a almacenar, consultar y administrar información."
+    },
+
+    "proyectos": {
+        nombre: "Proyectos",
+        icono: "🚀",
+        descripcion: "Practica lo aprendido construyendo proyectos reales."
+    }
+
+};
+
+const categorias = {
+
+    "programacion": [
+        ["principiantes", "Principiantes"],
+        ["variables-y-tipos-de-datos", "Variables y tipos de datos"],
+        ["condicionales", "Condicionales"],
+        ["bucles", "Bucles"],
+        ["funciones", "Funciones"],
+        ["estructuras-de-datos", "Estructuras de datos"],
+        ["algoritmos", "Algoritmos"],
+        ["programacion-orientada-a-objetos", "Programación orientada a objetos"],
+        ["manejo-de-errores", "Manejo de errores"],
+        ["debugging", "Debugging"],
+        ["buenas-practicas", "Buenas prácticas"],
+        ["proyectos", "Proyectos"]
+    ],
+
+    "desarrollo-web": [
+        ["html", "HTML"],
+        ["css", "CSS"],
+        ["javascript", "JavaScript"],
+        ["frontend", "Frontend"],
+        ["backend", "Backend"],
+        ["apis", "APIs"],
+        ["bases-de-datos-web", "Bases de datos web"],
+        ["autenticacion", "Autenticación"],
+        ["despliegue", "Despliegue"]
+    ],
+
+    "aplicaciones-moviles": [
+        ["android", "Android"],
+        ["ios", "iOS"],
+        ["flutter", "Flutter"],
+        ["react-native", "React Native"],
+        ["interfaces", "Interfaces"],
+        ["apis-moviles", "APIs móviles"],
+        ["almacenamiento", "Almacenamiento"],
+        ["publicacion", "Publicación"]
+    ],
+
+    "aplicaciones-escritorio": [
+        ["python", "Python"],
+        ["c-sharp", "C#"],
+        ["c-plus-plus", "C++"],
+        ["java", "Java"],
+        ["interfaces-graficas", "Interfaces gráficas"],
+        ["sistemas-de-archivos", "Sistemas de archivos"],
+        ["bases-de-datos", "Bases de datos"]
+    ],
+
+    "videojuegos": [
+        ["fundamentos", "Fundamentos"],
+        ["unity", "Unity"],
+        ["unreal-engine", "Unreal Engine"],
+        ["godot", "Godot"],
+        ["roblox-studio", "Roblox Studio"],
+        ["fisicas", "Físicas"],
+        ["interfaces", "Interfaces"],
+        ["inventarios", "Inventarios"],
+        ["enemigos", "Enemigos"],
+        ["multijugador", "Multijugador"],
+        ["optimizacion", "Optimización"],
+        ["publicacion", "Publicación"]
+    ],
+
+    "inteligencia-artificial": [
+        ["fundamentos", "Fundamentos"],
+        ["como-usar-ia", "Cómo usar IA"],
+        ["prompt-engineering", "Prompt Engineering"],
+        ["apis-de-ia", "APIs de IA"],
+        ["chatbots", "Chatbots"],
+        ["modelos-de-lenguaje", "Modelos de lenguaje"],
+        ["modelos-locales", "Modelos locales"],
+        ["rag", "RAG"],
+        ["fine-tuning", "Fine-tuning"],
+        ["agentes", "Agentes"],
+        ["machine-learning", "Machine Learning"],
+        ["computer-vision", "Computer Vision"]
+    ],
+
+    "herramientas": [
+        ["visual-studio-code", "Visual Studio Code"],
+        ["git", "Git"],
+        ["github", "GitHub"],
+        ["terminal", "Terminal"],
+        ["python", "Python"],
+        ["node-js", "Node.js"],
+        ["docker", "Docker"],
+        ["gestores-de-paquetes", "Gestores de paquetes"]
+    ],
+
+    "bases-de-datos": [
+        ["fundamentos", "Fundamentos"],
+        ["sql", "SQL"],
+        ["mysql", "MySQL"],
+        ["postgresql", "PostgreSQL"],
+        ["mongodb", "MongoDB"],
+        ["redis", "Redis"],
+        ["modelado", "Modelado"],
+        ["consultas", "Consultas"],
+        ["seguridad", "Seguridad"]
+    ],
+
+    "proyectos": [
+        ["principiantes", "Proyectos para principiantes"],
+        ["intermedios", "Proyectos intermedios"],
+        ["avanzados", "Proyectos avanzados"],
+        ["ideas", "Ideas"],
+        ["retos", "Retos"],
+        ["proyectos-completos", "Proyectos completos"]
+    ]
+
+};
+
+function mostrarInicio() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+        <section class="hero">
+
+            <h1>
+                Aprende a <span>programar</span>
+            </h1>
+
+            <p>
+                Explora cursos, aprende conceptos,
+                practica con ejercicios y construye proyectos.
+            </p>
+
+        </section>
 
 
-mobileMenuButton.addEventListener("click", () => {
-
-    mobileMenu.classList.toggle("active");
-
-});
+        <h2 class="section-title">
+            Áreas de aprendizaje
+        </h2>
 
 
-/* =========================
-   CERRAR MENÚ AL NAVEGAR
-========================= */
+        <section class="areas-grid">
 
-const mobileLinks =
-    mobileMenu.querySelectorAll("a");
+            ${Object.entries(areas).map(([id, area]) => `
+
+                <article
+                    class="area-card"
+                    onclick="mostrarArea('${id}')"
+                >
+
+                    <div class="area-icon">
+                        ${area.icono}
+                    </div>
+
+                    <h3>
+                        ${area.nombre}
+                    </h3>
+
+                    <p>
+                        ${area.descripcion}
+                    </p>
+
+                </article>
+
+            `).join("")}
+
+        </section>
+
+    `;
+}
+
+mostrarInicio();
+
+function mostrarArea(id) {
+
+    const area = areas[id];
+
+    const lista = categorias[id] || [];
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+        <div
+            class="back-button"
+            onclick="mostrarInicio()"
+        >
+            ← Volver
+        </div>
 
 
-mobileLinks.forEach(link => {
+        <section class="hero">
 
-    link.addEventListener("click", () => {
+            <h1>
+                ${area.icono}
+                ${area.nombre}
+            </h1>
 
-        mobileMenu.classList.remove("active");
+            <p>
+                ${area.descripcion}
+            </p>
 
-    });
-
-});
-
-
-/* =========================
-   CAMBIO DE TEMA
-========================= */
-
-const themeButton =
-    document.getElementById("themeButton");
+        </section>
 
 
-let lightMode = false;
+        <section class="categories">
 
+            ${lista.map(([carpeta, nombre]) => `
 
-themeButton.addEventListener("click", () => {
+                <article
+                    class="category"
+                    onclick="abrirLeccion('${id}', '${carpeta}')"
+                >
 
-    lightMode = !lightMode;
+                    <h3>
+                        ${nombre}
+                    </h3>
 
-    if (lightMode) {
+                    <p>
+                        Entrar a esta sección →
+                    </p>
 
-        document.documentElement.style.setProperty(
-            "--background",
-            "#f4f6fa"
-        );
+                </article>
 
-        document.documentElement.style.setProperty(
-            "--background-secondary",
-            "#ffffff"
-        );
+            `).join("")}
 
-        document.documentElement.style.setProperty(
-            "--card",
-            "#ffffff"
-        );
+        </section>
 
-        document.documentElement.style.setProperty(
-            "--card-hover",
-            "#f0f2f7"
-        );
+    `;
+}
 
-        document.documentElement.style.setProperty(
-            "--text",
-            "#111827"
-        );
+async function abrirLeccion(area, categoria) {
 
-        document.documentElement.style.setProperty(
-            "--text-secondary",
-            "#596579"
-        );
+    const ruta =
+        `contenido/${area}/${categoria}/README.md`;
 
-        document.documentElement.style.setProperty(
-            "--text-muted",
-            "#7b8798"
-        );
+    try {
 
-        document.documentElement.style.setProperty(
-            "--border",
-            "rgba(0, 0, 0, 0.08)"
-        );
+        const respuesta = await fetch(ruta);
 
-        themeButton.textContent = "☀️";
+        if (!respuesta.ok) {
+            throw new Error("No se encontró el contenido.");
+        }
 
-    } else {
+        const texto = await respuesta.text();
 
-        document.documentElement.style.setProperty(
-            "--background",
-            "#080b12"
-        );
+        mostrarLeccion(texto);
 
-        document.documentElement.style.setProperty(
-            "--background-secondary",
-            "#0d111a"
-        );
+    } catch (error) {
 
-        document.documentElement.style.setProperty(
-            "--card",
-            "#111722"
-        );
+        const app = document.getElementById("app");
 
-        document.documentElement.style.setProperty(
-            "--card-hover",
-            "#151d2b"
-        );
+        app.innerHTML = `
 
-        document.documentElement.style.setProperty(
-            "--text",
-            "#f4f7fb"
-        );
+            <div class="lesson">
 
-        document.documentElement.style.setProperty(
-            "--text-secondary",
-            "#9ca8ba"
-        );
+                <div
+                    class="back-button"
+                    onclick="mostrarArea('${area}')"
+                >
+                    ← Volver
+                </div>
 
-        document.documentElement.style.setProperty(
-            "--text-muted",
-            "#687487"
-        );
+                <h1>
+                    Contenido no disponible
+                </h1>
 
-        document.documentElement.style.setProperty(
-            "--border",
-            "rgba(255, 255, 255, 0.08)"
-        );
+                <p>
+                    No se pudo cargar:
+                </p>
 
-        themeButton.textContent = "🌙";
+                <pre>${ruta}</pre>
+
+                <p>
+                    Revisa que el archivo README.md
+                    exista en esa carpeta.
+                </p>
+
+            </div>
+
+        `;
 
     }
 
-});
+}
+
+function mostrarLeccion(texto) {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = `
+
+        <article class="lesson">
+
+            <div
+                class="back-button"
+                onclick="history.back()"
+            >
+                ← Volver
+            </div>
+
+            <pre>${texto}</pre>
+
+        </article>
+
+    `;
+
+}
